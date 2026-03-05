@@ -103,8 +103,8 @@ class PlaceList(Resource):
         try:
             new_place = facade.create_place(data_place)
 
-        except (TypeError, ValueError):
-            return {"error": "Invalid input data"}, 400
+        except (TypeError, ValueError) as e:
+            return {"error": str(e)}, 400
 
         return _serialize_place_list_item(new_place), 201
 
@@ -158,8 +158,8 @@ class PlaceResource(Resource):
             if not ok:
                 return {"error": "Place not found"}, 404
             return {"message": "Place updated successfully"}, 200
-        except (TypeError, ValueError):
-            return {"error": "Invalid input data"}, 400
+        except (TypeError, ValueError) as e:
+            return {"error": str(e)}, 400
 
 
 @api.route('/<place_id>/reviews')

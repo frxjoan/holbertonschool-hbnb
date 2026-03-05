@@ -23,8 +23,8 @@ class AmenityList(Resource):
 
         try:
             amenity = facade.create_amenity(data)
-        except (TypeError, ValueError):
-            return {"error": "Invalid input data"}, 400
+        except (TypeError, ValueError) as e:
+            return {"error": str(e)}, 400
 
         return {"id": amenity.id, "name": amenity.name}, 201
 
@@ -63,8 +63,8 @@ class AmenityResource(Resource):
 
         try:
             updated = facade.update_amenity(amenity_id, data)
-        except (TypeError, ValueError):
-            return {"error": "Invalid input data"}, 400
+        except (TypeError, ValueError) as e:
+            return {"error": str(e)}, 400
 
         if not updated:
             return {"error": "Amenity not found"}, 404

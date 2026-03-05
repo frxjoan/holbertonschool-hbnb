@@ -48,8 +48,8 @@ class ReviewList(Resource):
 
         try:
             new_review = facade.create_review(review_data)
-        except (TypeError, ValueError):
-            return {"error": "Invalid input data"}, 400
+        except (TypeError, ValueError) as e:
+            return {"error": str(e)}, 400
 
         return {
             "id": new_review.id,
@@ -133,8 +133,8 @@ class ReviewResource(Resource):
 
         try:
             updated = facade.update_review(review_id, review_data)
-        except (TypeError, ValueError):
-            return {"error": "Invalid input data"}, 400
+        except (TypeError, ValueError) as e:
+            return {"error": str(e)}, 400
 
         if not updated:
             return {"error": "Review not found"}, 404
