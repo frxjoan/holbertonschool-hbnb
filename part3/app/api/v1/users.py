@@ -7,6 +7,7 @@ and update users.
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 from app import bcrypt
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('users', description='User operations')
 
@@ -110,6 +111,7 @@ class UserResource(Resource):
     @api.response(200, "User updated successfully")
     @api.response(404, "User not found")
     @api.response(400, "Email already registered")
+    @jwt_required()
     def put(self, user_id):
         """Update a user by ID.
 
@@ -120,15 +122,18 @@ class UserResource(Resource):
             tuple[dict, int]: Updated user payload and HTTP 200 status.
             tuple[dict, int]: Error payload and HTTP 404/400 status.
         """
+        current_user_id = get_jwt_identity()
+        if current_user_id != user_id:
+            return {"error": "Unauthorized action"}, 403
+
         user = facade.get_user(user_id)
         if not user:
             return {"error": "User not found"}, 404
 
         user_data = api.payload
 
-        existing_user = facade.get_user_by_email(user_data['email'])
-        if existing_user and existing_user.id != user_id:
-            return {"error": "Email already registered"}, 400
+        if "email" in user_data or "password" in user_data:
+            return {"error": "You cannot modify email or password."}, 400
 
         try:
             updated_user = facade.update_user(user_id, user_data)
@@ -142,5 +147,5 @@ class UserResource(Resource):
             "id": updated_user.id,
             "first_name": updated_user.first_name,
             "last_name": updated_user.last_name,
-            "email": updated_user.email,
+            "email": updated_user.email
         }, 200
