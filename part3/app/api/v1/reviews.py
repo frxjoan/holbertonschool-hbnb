@@ -6,6 +6,7 @@ and delete reviews.
 
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace("reviews", description="Review operations")
 
@@ -13,7 +14,6 @@ api = Namespace("reviews", description="Review operations")
 review_model = api.model("Review", {
     "text": fields.String(required=True, description="Text of the review"),
     "rating": fields.Integer(required=True, description="Rating of the place (1-5)"),
-    "user_id": fields.String(required=True, description="ID of the user"),
     "place_id": fields.String(required=True, description="ID of the place")
 })
 
@@ -26,6 +26,7 @@ class ReviewList(Resource):
     @api.response(201, "Review successfully created")
     @api.response(400, "Invalid input data")
     @api.response(404, "Not found")
+    @jwt_required()
     def post(self):
         """Create a new review.
 
@@ -33,21 +34,35 @@ class ReviewList(Resource):
             tuple[dict, int]: Created review payload and HTTP 201 status.
             tuple[dict, int]: Error payload and HTTP 400 status.
         """
+        current_user_id = get_jwt_identity()
         review_data = api.payload
-        existing_place = facade.get_place(review_data["place_id"])
-        existing_user = facade.get_user(review_data["user_id"])
+        place = facade.get_place(review_data["place_id"])
+        current_user = facade.get_user(current_user_id)
 
-        if not existing_place:
-            return {"error": "Place doesn\'t exists"}, 400
-        if not existing_user:
-            return {"error": "User doesn\'t exists"}, 400
+        if not place:
+            return {"error": "Place not found"}, 404
+        if not current_user:
+            return {"error": "User not found"}, 404
 
-        owner_id = existing_place.owner.id if hasattr(existing_place.owner, "id") else existing_place.owner
-        if owner_id == existing_user.id:
-            return {"error": "Owner cannot review own place"}, 400
+        owner_id = place.owner.id if hasattr(place.owner, "id") else place.owner
+        if owner_id == current_user_id:
+            return {"error": "You cannot review your own place."}, 400
+
+        reviews = facade.get_reviews_by_place(review_data["place_id"])
+        for r in reviews:
+            review_user_id = r.user.id if hasattr(r.user, "id") else r.user
+            if review_user_id == current_user_id:
+                return {"error": "You have already reviewed this place."}, 400
 
         try:
-            new_review = facade.create_review(review_data)
+            review_data_to_create = {
+                "text": review_data["text"],
+                "rating": review_data["rating"],
+                "place_id": review_data["place_id"],
+                "user_id": current_user_id
+            }
+            new_review = facade.create_review(review_data_to_create)
+
         except (TypeError, ValueError) as e:
             return {"error": str(e)}, 400
 
@@ -55,8 +70,8 @@ class ReviewList(Resource):
             "id": new_review.id,
             "text": new_review.text,
             "rating": new_review.rating,
-            "user_id": new_review.user.id,
-            "place_id": new_review.place.id
+            "user_id": new_review.user.id if hasattr(new_review.user, "id") else new_review.user,
+            "place_id": new_review.place.id if hasattr(new_review.place, "id") else new_review.place
         }, 201
 
     @api.response(200, "List of reviews retrieved successfully")
@@ -102,14 +117,15 @@ class ReviewResource(Resource):
             "id": existing_review.id,
             "text": existing_review.text,
             "rating": existing_review.rating,
-            "user_id": existing_review.user.id,
-            "place_id": existing_review.place.id
+            "user_id": existing_review.user.id if hasattr(existing_review.user, "id") else existing_review.user,
+            "place_id": existing_review.place.id if hasattr(existing_review.place, "id") else existing_review.place
         }, 200
 
     @api.expect(review_model)
     @api.response(200, "Review updated successfully")
     @api.response(404, "Review not found")
     @api.response(400, "Invalid input data")
+    @jwt_required()
     def put(self, review_id):
         """Update review information by ID.
 
@@ -121,6 +137,15 @@ class ReviewResource(Resource):
             tuple[dict, int]: Error payload and HTTP 404 status.
         """
         review_data = api.payload
+        current_user_id = get_jwt_identity()
+        existing_review = facade.get_review(review_id)
+
+        if not existing_review:
+            return {"error": "Review not found"}, 404
+
+        review_user_id = existing_review.user.id if hasattr(existing_review.user, "id") else existing_review.user
+        if review_user_id != current_user_id:
+            return {"error": "Unauthorized action"}, 403
 
         if not review_data:
             return {"error": "Invalid input data"}, 400
@@ -143,6 +168,7 @@ class ReviewResource(Resource):
 
     @api.response(200, "Review deleted successfully")
     @api.response(404, "Review not found")
+    @jwt_required()
     def delete(self, review_id):
         """Delete a review by ID.
 
@@ -153,6 +179,16 @@ class ReviewResource(Resource):
             tuple[dict, int]: Success payload and HTTP 200 status.
             tuple[dict, int]: Error payload and HTTP 404 status.
         """
+        current_user_id = get_jwt_identity()
+        existing_review = facade.get_review(review_id)
+
+        if not existing_review:
+            return {"error": "Review not found"}, 404
+
+        review_user_id = existing_review.user.id if hasattr(existing_review.user, "id") else existing_review.user
+        if review_user_id != current_user_id:
+            return {"error": "Unauthorized action"}, 403
+
         deleted = facade.delete_review(review_id)
         if not deleted:
             return {"error": "Review not found"}, 404
