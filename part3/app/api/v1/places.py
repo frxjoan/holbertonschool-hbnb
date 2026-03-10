@@ -5,7 +5,7 @@ places, as well as retrieve reviews for a specific place.
 """
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 api = Namespace('places', description='Place operations')
 
@@ -145,16 +145,20 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place by ID."""
         current_user = get_jwt_identity()
+        claims = get_jwt()
+        is_admin = claims.get('is_admin', False)
+        user_id = claims.get('id')
 
         place = facade.get_place(place_id)
         if place is None:
             return {"error": "Place not found"}, 404
 
-        if str(_owner_id(place.owner)) != str(current_user):
+        owner_id = place.owner.id if hassattr(place.owner, "id") else place.owner
+
+        if not is_admin and owner_id != user_id:
             return {"error": "Unauthorized action"}, 403
 
         update_data = api.payload.copy()
-        update_data.pop("owner_id", None)
 
         try:
             updated_place = facade.update_place(place_id, update_data)
