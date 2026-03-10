@@ -8,19 +8,16 @@ from datetime import datetime
 from app import db
 
 
-class BaseModel:
+class BaseModel(db.Model):
     """Represent a base entity with UUID and timestamps."""
 
     def __init__(self):
         """Initialize a new base entity state."""
         __abstract__ = True
         id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-        created_at = db.Column(db.DateTime, default=datetime.utcnow)
-        updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+        created_at = db.Column(db.DateTime, default=datetime.now())
+        updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())
 
-    def save(self):
-        """Refresh the update timestamp after a mutation."""
-        self.updated_at = datetime.now()
 
     def update(self, data):
         """Update existing attributes from a mapping.
@@ -31,4 +28,3 @@ class BaseModel:
         for key, value in data.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-        self.save()
