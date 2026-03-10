@@ -14,26 +14,25 @@ It also enforces basic relationship integrity rules (existing owner,
 existing amenities) while relying on model-level validation.
 """
 
-from app.persistence import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import AmenityModel
 from app.models.place import Place
 from app.models.review import Review
 from app.persistence.repository import SQLAlchemyRepository
+from app.persistence.user_repository import UserRepository
 
 
 class HBnBFacade:
     """Central service layer for HBnB operations.
 
-    This class provides high-level methods (create/get/update/list/delete)
-    used by the API layer. It decouples controllers from persistence details
-    and applies consistency rules across entities.
+    This class provides high-level methods used by the API layer and delegates
+    persistence to repository classes backed by SQLAlchemy.
 
     Attributes:
-        user_repo: In-memory repository for `User` objects.
-        place_repo: In-memory repository for `Place` objects.
-        review_repo: In-memory repository for `Review` objects.
-        amenity_repo: In-memory repository for `AmenityModel` objects.
+        user_repo: SQLAlchemy repository for `User` objects.
+        place_repo: SQLAlchemy repository for `Place` objects.
+        review_repo: SQLAlchemy repository for `Review` objects.
+        amenity_repo: SQLAlchemy repository for `AmenityModel` objects.
     """
     def __init__(self):
         """Initialize the facade and its repositories.
@@ -43,7 +42,7 @@ class HBnBFacade:
             storage-agnostic and can later be wired to a database-backed layer
             without changing its public interface.
         """
-        self.user_repo = SQLAlchemyRepository(User)
+        self.user_repo = UserRepository()
         self.place_repo = SQLAlchemyRepository(Place)
         self.review_repo = SQLAlchemyRepository(Review)
         self.amenity_repo = SQLAlchemyRepository(AmenityModel)
@@ -62,6 +61,7 @@ class HBnBFacade:
             User: The newly created user instance.
         """
         user = User(**user_data)
+        user.hash_password(user_data['password'])
         self.user_repo.add(user)
         return user
 
@@ -85,7 +85,7 @@ class HBnBFacade:
         Returns:
             User | None: Matching user, or `None` if not found.
         """
-        return self.user_repo.get_by_attribute("email", email)
+        return self.user_repo.get_user_by_email(email)
 
     def get_all_users(self):
         """Retrieve the full list of users.
