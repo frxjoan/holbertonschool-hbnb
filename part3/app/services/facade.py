@@ -15,7 +15,7 @@ existing amenities) while relying on model-level validation.
 """
 
 from app.models.user import User
-from app.models.amenity import AmenityModel
+from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
 from app.persistence.repository import SQLAlchemyRepository
@@ -32,7 +32,7 @@ class HBnBFacade:
         user_repo: SQLAlchemy repository for `User` objects.
         place_repo: SQLAlchemy repository for `Place` objects.
         review_repo: SQLAlchemy repository for `Review` objects.
-        amenity_repo: SQLAlchemy repository for `AmenityModel` objects.
+        amenity_repo: SQLAlchemy repository for `Amenity` objects.
     """
     def __init__(self):
         """Initialize the facade and its repositories.
@@ -45,7 +45,7 @@ class HBnBFacade:
         self.user_repo = UserRepository()
         self.place_repo = SQLAlchemyRepository(Place)
         self.review_repo = SQLAlchemyRepository(Review)
-        self.amenity_repo = SQLAlchemyRepository(AmenityModel)
+        self.amenity_repo = SQLAlchemyRepository(Amenity)
 
     # ---------------------------------------------------------------------
     # Users
@@ -119,9 +119,9 @@ class HBnBFacade:
             amenity_data (dict): Amenity creation payload.
 
         Returns:
-            AmenityModel: Newly created amenity.
+            Amenity: Newly created amenity.
         """
-        amenity = AmenityModel(**amenity_data)
+        amenity = Amenity(**amenity_data)
         self.amenity_repo.add(amenity)
         return amenity
 
@@ -132,7 +132,7 @@ class HBnBFacade:
             amenity_id (str): Amenity identifier.
 
         Returns:
-            AmenityModel | None: Matching amenity, or `None` if not found.
+            Amenity | None: Matching amenity, or `None` if not found.
         """
         return self.amenity_repo.get(amenity_id)
 
@@ -156,83 +156,22 @@ class HBnBFacade:
         return self.amenity_repo.get_all()
 
     def update_amenity(self, amenity_id, amenity_data):
-        """Update an existing amenity.
-
-        Args:
-            amenity_id (str): Amenity identifier.
-            amenity_data (dict): Fields to update.
-
-        Returns:
-            AmenityModel | None: Updated amenity, or `None` if not found.
-        """
+        """Update an existing amenity."""
         amenity = self.amenity_repo.get(amenity_id)
-        if not amenity:
+        if amenity is None:
             return None
-        amenity.update(amenity_data)
-        amenity.save()
-        return amenity
+
+        self.amenity_repo.update(amenity_id, amenity_data)
+        return self.get_amenity(amenity_id)
 
     # ---------------------------------------------------------------------
     # Places
     # ---------------------------------------------------------------------
 
     def create_place(self, place_data):
-        """Create a `Place` after validating linked entities.
-
-        Applied rules:
-            - `place_data` must be a dictionary.
-            - Required fields must be present.
-            - `owner_id` must reference an existing user.
-            - `amenities` must reference existing amenity IDs.
-
-        Args:
-            place_data (dict): Place creation payload.
-
-        Returns:
-            Place: The newly created place instance.
-
-        Raises:
-            TypeError: If input types are invalid.
-            ValueError: If a required field is missing or a relation is invalid.
-        """
-        if not isinstance(place_data, dict):
-            raise TypeError("place_data must be a dict")
-
-        required = ["title", "price", "latitude", "longitude", "owner_id", "amenities"]
-        for k in required:
-            if k not in place_data:
-                raise ValueError(f"{k} is required")
-
-        owner_id = place_data.get("owner_id")
-        owner = self.user_repo.get(owner_id)
-        if owner is None:
-            raise ValueError("Owner not found")
-
-        amenity_ids = place_data.get("amenities", [])
-        if not isinstance(amenity_ids, list):
-            raise TypeError("amenities must be a list of amenity IDs")
-
-        amenities = []
-        for aid in amenity_ids:
-            a = self.amenity_repo.get(aid)
-            if a is None:
-                raise ValueError("Amenity not found")
-            amenities.append(a)
-
-        place = Place(
-            title=place_data.get("title"),
-            description=place_data.get("description", ""),
-            price=place_data.get("price"),
-            latitude=place_data.get("latitude"),
-            longitude=place_data.get("longitude"),
-            owner=owner_id,
-        )
-
-        place.amenities = amenities
-        place.reviews = []
-
+        """Create a new place."""
+        place = Place(**place_data)
         self.place_repo.add(place)
-
         return place
 
     def get_place(self, place_id):
@@ -255,112 +194,22 @@ class HBnBFacade:
         return self.place_repo.get_all()
 
     def update_place(self, place_id, place_data):
-        """Update an existing place with consistency checks.
-
-        Applied rules:
-            - The target place must exist.
-            - `place_data` must be a dictionary.
-            - `owner_id` (if provided) must exist.
-            - `amenities` (if provided) must contain existing IDs.
-            - Only allowed fields are applied to the model.
-
-        Args:
-            place_id (str): Identifier of the place to update.
-            place_data (dict): Update payload.
-
-        Returns:
-            bool: `True` when updated, `False` if the place is not found.
-
-        Raises:
-            TypeError: If input types are invalid.
-            ValueError: If owner/amenity relations are invalid.
-        """
+        """Update an existing place."""
         place = self.place_repo.get(place_id)
         if place is None:
-            return False
+            return None
 
-        if not isinstance(place_data, dict):
-            raise TypeError("place_data must be a dict")
-
-        if "owner_id" in place_data:
-            new_owner = self.user_repo.get(place_data["owner_id"])
-            if new_owner is None:
-                raise ValueError("Owner not found")
-            place_data = dict(place_data)
-            place_data["owner"] = place_data.pop("owner_id")
-
-        if "amenities" in place_data:
-            amenity_ids = place_data["amenities"]
-            if not isinstance(amenity_ids, list):
-                raise TypeError("amenities must be a list of amenity IDs")
-
-            new_amenities = []
-            for aid in amenity_ids:
-                a = self.amenity_repo.get(aid)
-                if a is None:
-                    raise ValueError("Amenity not found")
-                new_amenities.append(a)
-            place.amenities = new_amenities
-
-        allowed_for_place = {k: v for k, v in place_data.items()
-                             if k in {"title", "description", "price", "latitude", "longitude", "owner"}}
-        if allowed_for_place:
-            place.update(allowed_for_place)
-            place.save()
-
-        return True
+        self.place_repo.update(place_id, place_data)
+        return self.get_place(place_id)
 
     # ---------------------------------------------------------------------
     # Reviews
     # ---------------------------------------------------------------------
 
     def create_review(self, review_data):
-        """Create a review linked to an existing user and place.
-
-        Args:
-            review_data (dict): Review creation payload.
-
-        Returns:
-            Review: The newly created review.
-
-        Raises:
-            TypeError: If `review_data` is not a dictionary.
-            ValueError: If a required field is missing or user/place is not found.
-        """
-        if not isinstance(review_data, dict):
-            raise TypeError("review_data must be a dict")
-
-        for k in ("text", "rating", "user_id", "place_id"):
-            if k not in review_data:
-                raise ValueError(f"{k} is required")
-
-        user = self.user_repo.get(review_data["user_id"])
-        if user is None:
-            raise ValueError("User not found")
-
-        place = self.place_repo.get(review_data["place_id"])
-        if place is None:
-            raise ValueError("Place not found")
-
-        existing_review_ids = getattr(place, "reviews", []) or []
-        for rid in existing_review_ids:
-            existing = self.review_repo.get(rid)
-            if existing and getattr(existing, "user", None) and getattr(existing.user, "id", None) == user.id:
-                raise ValueError("User has already reviewed this place")
-
-        review = Review(
-            text=review_data["text"],
-            rating=review_data["rating"],
-            place=place,
-            user=user,
-        )
+        """Create a new review."""
+        review = Review(**review_data)
         self.review_repo.add(review)
-
-        if place.reviews is None:
-            place.reviews = []
-        place.reviews.append(review.id)
-        place.save()
-
         return review
 
     def get_review(self, review_id):
@@ -405,20 +254,13 @@ class HBnBFacade:
         return out
 
     def update_review(self, review_id, review_data):
-        """Update an existing review.
-
-        Args:
-            review_id (str): Review identifier.
-            review_data (dict): Fields to update.
-
-        Returns:
-            bool: `True` if the update is applied, otherwise `False`.
-        """
+        """Update an existing review."""
         review = self.review_repo.get(review_id)
         if review is None:
-            return False
-        review.update(review_data)
-        return True
+            return None
+
+    self.review_repo.update(review_id, review_data)
+    return self.get_review(review_id)
 
     def delete_review(self, review_id):
         """Delete a review and clean its reference from the place.
