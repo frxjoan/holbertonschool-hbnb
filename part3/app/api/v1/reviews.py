@@ -146,15 +146,7 @@ class ReviewResource(Resource):
         if not existing_review:
             return {"error": "Review not found"}, 404
 
-<<<<<<< HEAD
         review_user_id = existing_review.owner_id
-=======
-        review_user_id = (
-            existing_review.user.id
-            if hasattr(existing_review.user, "id")
-            else existing_review.user
-        )
->>>>>>> feature/sql-scripts
 
         if review_user_id != current_user_id and not is_admin:
             return {"error": "Unauthorized action"}, 403
