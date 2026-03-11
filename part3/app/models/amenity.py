@@ -1,13 +1,13 @@
 """Amenity domain model.
 
-This module defines `AmenityModel`, an entity representing a feature or
+This module defines `Amenity`, an entity representing a feature or
 service that can be attached to places.
 """
 
 from .base import BaseModel
 
 
-class AmenityModel(BaseModel):
+class Amenity(BaseModel):
     """Amenity entity that can be linked to places.
 
     Attributes:
