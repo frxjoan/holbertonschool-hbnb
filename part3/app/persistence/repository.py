@@ -158,10 +158,13 @@ class SQLAlchemyRepository(Repository):
     def update(self, obj_id, data):
         obj = self.get(obj_id)
         if obj:
+<<<<<<< HEAD
             if hasattr(obj, "update"):
                 obj.update(data)
                 return
 
+=======
+>>>>>>> feature/sql-scripts
             for key, value in data.items():
                 setattr(obj, key, value)
             db.session.commit()

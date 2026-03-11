@@ -142,6 +142,7 @@ class PlaceResource(Resource):
         current_user = get_jwt_identity()
         claims = get_jwt()
         is_admin = claims.get('is_admin', False)
+
         user_id = claims.get('id', current_user)
 
         place = facade.get_place(place_id)
