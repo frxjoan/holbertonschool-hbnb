@@ -16,12 +16,26 @@ class User(BaseModel):
     # Simple email pattern for common cases
     EMAIL_PATTERN = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
 
-
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+
+    # Relationships with places and reviews tables
+    places = db.relationship(
+        'Place',
+        backref='owner',
+        lazy=True,
+        cascade='all, delete-orphan'
+    )
+
+    reviews = db.relationship(
+        'Review',
+        backref='author',
+        lazy=True,
+        cascade='all, delete-orphan'
+    )
 
     def __init__(self, first_name, last_name, email, password, is_admin=False):
         """Initialize a user instance with validated fields.
@@ -37,7 +51,7 @@ class User(BaseModel):
             ValueError: If a provided value violates validation rules.
         """
         super().__init__()
-        # Validate and normalize before storing
+
         self.first_name = self.validate_first_name(first_name)
         self.last_name = self.validate_last_name(last_name)
         self.email = self.validate_email(email)
