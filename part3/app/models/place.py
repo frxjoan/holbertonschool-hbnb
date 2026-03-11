@@ -1,6 +1,8 @@
 """Place model representing a property listed in the HBnB application."""
 
 from .base import BaseModel
+from app import db
+from .amenity import place_amenity
 
 
 class Place(BaseModel):
@@ -38,6 +40,7 @@ class Place(BaseModel):
             ValueError: If a value does not meet validation rules.
         """
         super().__init__()
+
         self.title = self.validate_title(title)
         self.description = self.validate_description(description)
         self.price = self.validate_price(price)
@@ -47,6 +50,27 @@ class Place(BaseModel):
 
         self.reviews = []
         self.amenities = []
+
+        # Relationships with user, place and review
+
+        # Foreign key to user
+        user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+
+        # One-to-many: Place -> Review
+        reviews = db.relationship(
+            'Review',
+            backref='place',
+            lazy=True,
+            cascade='all, delete-orphan'
+        )
+
+        # Many-to-many: Place <-> Amenity
+        amenities = db.relationship(
+            'AmenityModel',
+            secondary=place_amenity,
+            lazy='subquery',
+            backref=db.backref('places', lazy=True)
+        )
 
     def validate_title(self, value):
         """Validate the place title value.
