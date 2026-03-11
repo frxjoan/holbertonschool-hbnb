@@ -76,9 +76,6 @@ class Place(BaseModel):
         self.longitude = self.validate_longitude(longitude)
         self.owner = self.validate_owner(owner)
 
-        self.reviews = []
-        self.amenities = []
-
 
     def validate_title(self, value):
         """Validate the place title value.
