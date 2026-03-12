@@ -19,7 +19,8 @@ user_model = api.model('User', {
                                description='Last name of the user'),
     'email': fields.String(required=True,
                            description='Email of the user'),
-    'password': fields.String(required=True, description='Password of the user')
+    'password': fields.String(required=True, description='Password of the user'),
+    'is_admin': fields.Boolean(required=False)
 })
 
 user_update_model = api.model('UserUpdate', {
@@ -57,7 +58,8 @@ class UserList(Resource):
                 'first_name': user_data['first_name'],
                 'last_name': user_data['last_name'],
                 'email': user_data['email'],
-                'password': user_data['password']
+                'password': user_data['password'],
+                'is_admin': user_data['admin']
             }
 
             new_user = facade.create_user(user_data_to_create)
