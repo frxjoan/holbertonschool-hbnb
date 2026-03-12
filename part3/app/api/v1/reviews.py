@@ -13,8 +13,15 @@ api = Namespace("reviews", description="Review operations")
 # Define the review model for input validation and documentation
 review_model = api.model("Review", {
     "text": fields.String(required=True, description="Text of the review"),
-    "rating": fields.Integer(required=True, description="Rating of the place (1-5)"),
+    "rating": fields.Integer(required=True, min=1, max=5,
+                              description="Rating of the place (1-5)"),
     "place_id": fields.String(required=True, description="ID of the place")
+})
+
+review_update_model = api.model("ReviewUpdate", {
+    "text": fields.String(description="Text of the review"),
+    "rating": fields.Integer(min=1, max=5,
+                              description="Rating of the place (1-5)")
 })
 
 
@@ -26,6 +33,8 @@ class ReviewList(Resource):
     @api.response(201, "Review successfully created")
     @api.response(400, "Invalid input data")
     @api.response(404, "Not found")
+    @api.response(401, 'Missing or invalid JWT token')
+    @api.doc(security='Bearer')
     @jwt_required()
     def post(self):
         """Create a new review.
@@ -120,11 +129,13 @@ class ReviewResource(Resource):
             "place_id": existing_review.place_id
         }, 200
 
-    @api.expect(review_model)
+    @api.expect(review_update_model)
     @api.response(200, "Review updated successfully")
     @api.response(404, "Review not found")
     @api.response(400, "Invalid input data")
     @api.response(403, "Unauthorized action")
+    @api.response(401, 'Missing or invalid JWT token')
+    @api.doc(security='Bearer')
     @jwt_required()
     def put(self, review_id):
         """Update review information by ID.
@@ -175,6 +186,8 @@ class ReviewResource(Resource):
     @api.response(200, "Review deleted successfully")
     @api.response(404, "Review not found")
     @api.response(403, "Unauthorized action")
+    @api.response(401, 'Missing or invalid JWT token')
+    @api.doc(security='Bearer')
     @jwt_required()
     def delete(self, review_id):
         """Delete a review by ID.

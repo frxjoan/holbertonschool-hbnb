@@ -7,7 +7,7 @@ VALUES (
     'Admin',
     'HBnB',
     'admin@hbnb.io',
-    '$2b$12$6D/A418HGqInNHr.syUNf.HAyxcK6Uz2FB4yuiOQwSpytaoD48TTG',
+    '$2b$12$6AbdYb1WWkL2T0LyPNaw9uamxMR90ck0MD0ZAFHn3ewDk8Ynqc4H6',
     1
 )
 ON CONFLICT(id) DO UPDATE SET

@@ -24,18 +24,22 @@ user_model = api.model('PlaceUser', {
 place_model = api.model('Place', {
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(description='Description of the place'),
-    'price': fields.Float(required=True, description='Price per night'),
-    'latitude': fields.Float(required=True, description='Latitude of the place'),
-    'longitude': fields.Float(required=True, description='Longitude of the place'),
+    'price': fields.Float(required=True, min=0, description='Price per night (>= 0)'),
+    'latitude': fields.Float(required=True, min=-90, max=90,
+                             description='Latitude of the place (between -90 and 90)'),
+    'longitude': fields.Float(required=True, min=-180, max=180,
+                              description='Longitude of the place (between -180 and 180)'),
     'amenities': fields.List(fields.String, required=True, description="List of amenities ID's")
 })
 
 place_update_model = api.model('PlaceUpdate', {
     'title': fields.String(description='Title of the place'),
     'description': fields.String(description='Description of the place'),
-    'price': fields.Float(description='Price per night'),
-    'latitude': fields.Float(description='Latitude of the place'),
-    'longitude': fields.Float(description='Longitude of the place'),
+    'price': fields.Float(min=0, description='Price per night (>= 0)'),
+    'latitude': fields.Float(min=-90, max=90,
+                             description='Latitude of the place (between -90 and 90)'),
+    'longitude': fields.Float(min=-180, max=180,
+                              description='Longitude of the place (between -180 and 180)'),
     'amenities': fields.List(fields.String, description="List of amenities ID's")
 })
 
@@ -83,10 +87,12 @@ def _serialize_place_detail(place):
 @api.route('/')
 class PlaceList(Resource):
     """Resource for place collection operations."""
+    @api.doc(security='Bearer')
     @jwt_required()
     @api.expect(place_model, validate=True)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
+    @api.response(401, 'Missing or invalid JWT token')
     def post(self):
         """Create a new place."""
         current_user = get_jwt_identity()
@@ -136,6 +142,8 @@ class PlaceResource(Resource):
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
     @api.response(403, 'Unauthorized action')
+    @api.response(401, 'Missing or invalid JWT token')
+    @api.doc(security='Bearer')
     @jwt_required()
     def put(self, place_id):
         """Update a place by ID."""

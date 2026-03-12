@@ -22,6 +22,13 @@ user_model = api.model('User', {
     'password': fields.String(required=True, description='Password of the user')
 })
 
+user_update_model = api.model('UserUpdate', {
+    'first_name': fields.String(required=False,
+                                description='First name of the user'),
+    'last_name': fields.String(required=False,
+                               description='Last name of the user')
+})
+
 
 @api.route('/')
 class UserList(Resource):
@@ -107,10 +114,12 @@ class UserResource(Resource):
                 'last_name': user.last_name, 'email': user.email}, 200
 
 
-    @api.expect(user_model, validate=True)
+    @api.expect(user_update_model, validate=True)
     @api.response(200, "User updated successfully")
     @api.response(404, "User not found")
     @api.response(400, "Email already registered")
+    @api.response(401, 'Missing or invalid JWT token')
+    @api.doc(security='Bearer')
     @jwt_required()
     def put(self, user_id):
         """Update a user by ID.
@@ -131,6 +140,13 @@ class UserResource(Resource):
             return {"error": "User not found"}, 404
 
         user_data = api.payload
+
+        if not user_data:
+            return {"error": "Invalid input data"}, 400
+
+        allowed_fields = {"first_name", "last_name"}
+        if not any(field in user_data for field in allowed_fields):
+            return {"error": "Invalid input data"}, 400
 
         if "email" in user_data or "password" in user_data:
             return {"error": "You cannot modify email or password."}, 400

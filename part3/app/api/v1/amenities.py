@@ -19,6 +19,8 @@ class AmenityList(Resource):
     @api.response(201, "Amenity successfully created")
     @api.response(400, "Invalid input data")
     @api.response(403, "Admin privileges required")
+    @api.response(401, 'Missing or invalid JWT token')
+    @api.doc(security='Bearer')
     @jwt_required()
     def post(self):
         """Create a new amenity."""
@@ -62,6 +64,8 @@ class AmenityResource(Resource):
     @api.response(404, "Amenity not found")
     @api.response(400, "Invalid input data")
     @api.response(403, "Admin privileges required")
+    @api.response(401, 'Missing or invalid JWT token')
+    @api.doc(security='Bearer')
     @jwt_required()
     def put(self, amenity_id):
         """Update an amenity by ID."""

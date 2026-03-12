@@ -23,12 +23,23 @@ def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    authorizations = {
+        "Bearer": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization",
+            "description": "JWT Authorization header using: Bearer <token>",
+        }
+    }
+
     api = Api(
         app,
         version="1.0",
         title="HBnB API",
         description="HBnB Application API",
         doc="/api/v1/",
+        authorizations=authorizations,
+        security="Bearer",
     )
 
     api.add_namespace(users_ns, path="/api/v1/users")
@@ -40,5 +51,21 @@ def create_app(config_class="config.DevelopmentConfig"):
     bcrypt.init_app(app)
     jwt.init_app(app)
     db.init_app(app)
+
+    @jwt.unauthorized_loader
+    def unauthorized_callback(reason):
+        return {"error": reason}, 401
+
+    @jwt.invalid_token_loader
+    def invalid_token_callback(reason):
+        return {"error": reason}, 422
+
+    @jwt.expired_token_loader
+    def expired_token_callback(_jwt_header, _jwt_payload):
+        return {"error": "Token has expired"}, 401
+
+    @jwt.needs_fresh_token_loader
+    def needs_fresh_token_callback(_jwt_header, _jwt_payload):
+        return {"error": "Fresh token required"}, 401
 
     return app
