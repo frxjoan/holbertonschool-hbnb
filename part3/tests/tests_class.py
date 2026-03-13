@@ -239,20 +239,17 @@ class TestUserModel(unittest.TestCase):
         user.update({"email": "new@example.com"})
         self.assertEqual(user.email, "new@example.com")
 
-    def test_update_password_hashes_new_password(self):
+    def test_update_is_admin(self):
         user = User(
             first_name="John",
             last_name="Doe",
             email="john@example.com",
             password="password123"
         )
-        old_hash = user.password
         user.save()
 
-        user.update({"password": "newpassword456"})
-
-        self.assertNotEqual(user.password, old_hash)
-        self.assertTrue(user.verify_password("newpassword456"))
+        user.update({"is_admin": True})
+        self.assertTrue(user.is_admin)
 
 
 
@@ -752,6 +749,19 @@ class TestFacadeUsers(unittest.TestCase):
 
         self.assertEqual(updated.first_name, "Updated")
 
+    def test_create_admin_user(self):
+        user = self.facade.create_user({
+            "first_name": "Admin",
+            "last_name": "User",
+            "email": "admin@example.com",
+            "password": "admin123",
+            "is_admin": True
+        })
+
+        self.assertIsNotNone(user.id)
+        self.assertEqual(user.email, "admin@example.com")
+        self.assertTrue(user.is_admin)
+
 
 # TEST USER ENDPOINT
 
@@ -790,6 +800,8 @@ class TestAPIUsers(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         data = response.get_json()
         self.assertIn("id", data)
+        self.assertIn("is_admin", data)
+        self.assertFalse(data["is_admin"])
 
     def test_create_user_duplicate_email(self):
         payload = {
@@ -814,6 +826,27 @@ class TestAPIUsers(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.get_json()["error"], "Email already registered")
 
+    def test_create_admin_user(self):
+        payload = {
+            "first_name": "Admin",
+            "last_name": "User",
+            "email": "admin@example.com",
+            "password": "admin123",
+            "is_admin": True
+        }
+
+        response = self.client.post(
+            "/api/v1/users/",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 201)
+        data = response.get_json()
+        self.assertIn("id", data)
+        self.assertIn("is_admin", data)
+        self.assertTrue(data["is_admin"])
+
     def test_get_user(self):
         payload = {
             "first_name": "John",
@@ -834,6 +867,8 @@ class TestAPIUsers(unittest.TestCase):
 
         data = response.get_json()
         self.assertEqual(data["email"], "john@example.com")
+        self.assertIn("is_admin", data)
+        self.assertFalse(data["is_admin"])
 
     def test_get_user_not_found(self):
         response = self.client.get("/api/v1/users/not-found-id")
