@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import create_access_token
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+from flask_jwt_extended.exceptions import JWTExtendedException, NoAuthorizationError
 from app.services import facade
 
 api = Namespace('auth', description='Authentication operations')
@@ -11,6 +12,7 @@ login_model = api.model('Login', {
 })
 
 @api.route('/login')
+@api.response(401, 'Invalid credentials')
 class Login(Resource):
     @api.expect(login_model, validate=True)
     def post(self):
@@ -32,13 +34,18 @@ class Login(Resource):
 @api.route('/protected')
 class ProtectedResource(Resource):
     @api.doc(security='Bearer')
-    @jwt_required()
     def get(self):
-         """A protected endpoint that requires a valid JWT token"""
-         print("jwt------")
-         print(get_jwt_identity())
-         current_user = get_jwt_identity() # Retrieve the user's identity from the token
-         #if you need to see if the user is an admin or not, you can access additional claims using get_jwt() :
-         # addtional claims = get_jwt()
-         #additional claims["is_admin"] -> True or False
-         return {'message': f'Hello, user {current_user}'}, 200
+        """A protected endpoint that requires a valid JWT token."""
+        try:
+            verify_jwt_in_request()
+            current_user = get_jwt_identity()
+            return {'message': f'Hello, user {current_user}'}, 200
+
+        except NoAuthorizationError as err:
+            return {'error': str(err)}, 401
+
+        except JWTExtendedException as err:
+            return {'error': str(err)}, 422
+
+        except Exception:
+            return {'error': 'Invalid token'}, 422
