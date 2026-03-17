@@ -131,11 +131,14 @@ Both successful scenarios and error cases were executed.
 | Method | Endpoint | Scenario | Expected | Result |
 |--------|----------|----------|----------|--------|
 | POST | /auth/login | Valid credentials | 200 OK with JWT | PASS |
+| POST | /auth/login | Admin login (alice.admin@example.com) | 200 OK with JWT | PASS |
+| POST | /auth/login | Second user login (jane.smith@example.com) | 200 OK with JWT | PASS |
+| POST | /auth/login | Login with updated password (john.updated@example.com) | 200 OK with JWT | PASS |
 | POST | /auth/login | Invalid email | 401 Unauthorized | PASS |
 | POST | /auth/login | Invalid password | 401 Unauthorized | PASS |
 | POST | /auth/login | Missing fields | 400 Bad Request | PASS |
 | GET | /auth/protected | Valid JWT | 200 OK | PASS |
-| GET | /auth/protected | Invalid JWT | 401 Unauthorized | PASS |
+| GET | /auth/protected | Invalid JWT | 422 Unprocessable Entity | PASS |
 | GET | /auth/protected | No JWT | 401 Unauthorized | PASS |
 
 ### User Endpoints
@@ -143,6 +146,8 @@ Both successful scenarios and error cases were executed.
 | Method | Endpoint | Scenario | Expected | Result |
 |--------|----------|----------|----------|--------|
 | POST | /users/ | Valid user data | 201 Created | PASS |
+| POST | /users/ | Create admin user (`is_admin: true`) | 201 Created | PASS |
+| POST | /users/ | Create second user | 201 Created | PASS |
 | POST | /users/ | Empty first_name | 400 Bad Request | PASS |
 | POST | /users/ | Empty last_name | 400 Bad Request | PASS |
 | POST | /users/ | Empty email | 400 Bad Request | PASS |
@@ -187,7 +192,7 @@ Both successful scenarios and error cases were executed.
 | POST | /places/ | Negative price | 400 Bad Request | PASS |
 | POST | /places/ | Invalid latitude | 400 Bad Request | PASS |
 | POST | /places/ | Invalid longitude | 400 Bad Request | PASS |
-| POST | /places/ | Invalid owner_id | 400 Bad Request | PASS |
+| POST | /places/ | Invalid owner_id in payload (overridden by JWT identity) | 201 Created | PASS |
 | POST | /places/ | Invalid amenities | 400 Bad Request | PASS |
 | GET | /places/ | List all places | 200 OK | PASS |
 | GET | /places/<id> | Existing place | 200 OK | PASS |
@@ -199,7 +204,7 @@ Both successful scenarios and error cases were executed.
 | PUT | /places/<id> | Invalid update data | 400 Bad Request | PASS |
 | PUT | /places/<invalid> | Update non-existent place | 404 Not Found | PASS |
 | GET | /places/<id>/reviews | Existing place with reviews | 200 OK | PASS |
-| GET | /places/<id>/reviews | Existing place with no reviews | 200 OK (empty) | PASS |
+| GET | /places/<id>/reviews | Existing place with no reviews | 200 OK  | PASS |
 | GET | /places/<invalid>/reviews | Non-existent place | 404 Not Found | PASS |
 
 ### Review Endpoints
@@ -210,7 +215,7 @@ Both successful scenarios and error cases were executed.
 | POST | /reviews/ | Valid review (not authenticated) | 401 Unauthorized | PASS |
 | POST | /reviews/ | Empty text | 400 Bad Request | PASS |
 | POST | /reviews/ | Invalid rating | 400 Bad Request | PASS |
-| POST | /reviews/ | Invalid place_id | 400 Bad Request | PASS |
+| POST | /reviews/ | Invalid place_id | 404 Not Found | PASS |
 | POST | /reviews/ | Review own place | 400 Bad Request | PASS |
 | POST | /reviews/ | Duplicate review (same user/place) | 400 Bad Request | PASS |
 | GET | /reviews/ | List all reviews | 200 OK | PASS |
