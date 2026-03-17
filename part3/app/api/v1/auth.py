@@ -1,3 +1,8 @@
+"""Authentication API endpoints.
+
+This module provides login and token validation endpoints.
+"""
+
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
@@ -16,7 +21,7 @@ login_model = api.model('Login', {
 class Login(Resource):
     @api.expect(login_model, validate=True)
     def post(self):
-        """Authenticate user and return a JWT token"""
+        """Authenticate a user and return a JWT access token."""
         credentials = api.payload
         
         user = facade.get_user_by_email(credentials['email'])
@@ -35,7 +40,7 @@ class Login(Resource):
 class ProtectedResource(Resource):
     @api.doc(security='Bearer')
     def get(self):
-        """A protected endpoint that requires a valid JWT token."""
+        """Validate the provided JWT and return the current user identity."""
         try:
             verify_jwt_in_request()
             current_user = get_jwt_identity()

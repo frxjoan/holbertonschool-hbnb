@@ -1,3 +1,5 @@
+"""Application entry point for local execution."""
+
 from app import create_app
 
 app = create_app()

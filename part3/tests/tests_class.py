@@ -77,7 +77,7 @@ class TestBaseModel(unittest.TestCase):
         refreshed = DummyModel.query.get(obj.id)
         self.assertEqual(refreshed.name, "after")
 
-# USER TEST
+# User model tests.
 
 
 class TestUserModel(unittest.TestCase):
@@ -253,7 +253,7 @@ class TestUserModel(unittest.TestCase):
 
 
 
-# PLACE TEST
+# Place model tests.
 
 class TestPlaceModel(unittest.TestCase):
     def setUp(self):
@@ -370,7 +370,7 @@ class TestPlaceModel(unittest.TestCase):
         self.assertEqual(place.price, 120.0)
 
 
-# REVIEW TEST
+# Review model tests.
 
 class TestReviewModel(unittest.TestCase):
     def setUp(self):
@@ -474,7 +474,7 @@ class TestReviewModel(unittest.TestCase):
         self.assertEqual(review.rating, 5)
 
 
-# AMENITY TEST
+# Amenity model tests.
 
 
 class TestAmenityModel(unittest.TestCase):
@@ -517,7 +517,7 @@ class TestAmenityModel(unittest.TestCase):
         self.assertEqual(amenity.name, "Swimming Pool")
 
 
-# TEST REPOSITORY
+# Repository tests.
 
 
 class TestSQLAlchemyRepository(unittest.TestCase):
@@ -623,7 +623,7 @@ class TestSQLAlchemyRepository(unittest.TestCase):
         self.assertEqual(found.first_name, "John")
 
 
-# USER REPOSITORY TEST
+# User repository tests.
 
 
 class TestUserRepository(unittest.TestCase):
@@ -662,7 +662,7 @@ class TestUserRepository(unittest.TestCase):
         self.assertIsNone(found)
 
 
-# TEST FACADE USER
+# Facade user tests.
 
 
 class TestFacadeUsers(unittest.TestCase):
@@ -763,7 +763,7 @@ class TestFacadeUsers(unittest.TestCase):
         self.assertTrue(user.is_admin)
 
 
-# TEST USER ENDPOINT
+# User endpoint tests.
 
 
 class TestAPIUsers(unittest.TestCase):
@@ -875,7 +875,7 @@ class TestAPIUsers(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
 
 
-# TEST API AUTH
+# Authentication endpoint tests.
 
 
 class TestAPIAuth(unittest.TestCase):

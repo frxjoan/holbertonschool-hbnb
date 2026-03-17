@@ -11,7 +11,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 api = Namespace('users', description='User operations')
 
-# Define the user model for input validation and documentation
+# Define the user model for input validation and API documentation.
 user_model = api.model('User', {
     'first_name': fields.String(required=True,
                                 description='First name of the user'),
@@ -54,7 +54,7 @@ class UserList(Resource):
         """
         user_data = api.payload
 
-        # Simulate email uniqueness check
+        # Check email uniqueness.
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400

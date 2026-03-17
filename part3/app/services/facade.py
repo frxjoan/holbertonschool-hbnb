@@ -38,18 +38,15 @@ class HBnBFacade:
         """Initialize the facade and its repositories.
 
         Note:
-            This implementation uses in-memory repositories. The facade remains
-            storage-agnostic and can later be wired to a database-backed layer
-            without changing its public interface.
+            This implementation uses SQLAlchemy-backed repositories while
+            preserving a storage-agnostic service interface.
         """
         self.user_repo = UserRepository()
         self.place_repo = SQLAlchemyRepository(Place)
         self.review_repo = SQLAlchemyRepository(Review)
         self.amenity_repo = SQLAlchemyRepository(Amenity)
 
-    # ---------------------------------------------------------------------
-    # Users
-    # ---------------------------------------------------------------------
+    # User operations.
 
     def create_user(self, user_data):
         """Create and persist a user.
@@ -108,9 +105,7 @@ class HBnBFacade:
         self.user_repo.update(user_id, user_data)
         return self.get_user(user_id)
 
-    # ---------------------------------------------------------------------
-    # Amenities
-    # ---------------------------------------------------------------------
+    # Amenity operations.
 
     def create_amenity(self, amenity_data):
         """Create a new amenity.
@@ -143,7 +138,7 @@ class HBnBFacade:
             amenity_name (str): Amenity name.
 
         Returns:
-            AmenityModel | None: Matching amenity, or `None` if not found.
+            Amenity | None: Matching amenity, or `None` if not found.
         """
         return self.amenity_repo.get_by_attribute("name", amenity_name)
 
@@ -151,7 +146,7 @@ class HBnBFacade:
         """Retrieve all amenities.
 
         Returns:
-            list[AmenityModel]: List of all amenities.
+            list[Amenity]: List of all amenities.
         """
         return self.amenity_repo.get_all()
 
@@ -164,9 +159,7 @@ class HBnBFacade:
         self.amenity_repo.update(amenity_id, amenity_data)
         return self.get_amenity(amenity_id)
 
-    # ---------------------------------------------------------------------
-    # Places
-    # ---------------------------------------------------------------------
+    # Place operations.
 
     def create_place(self, place_data):
         """Create a new place."""
@@ -227,9 +220,7 @@ class HBnBFacade:
 
         return self.get_place(place_id)
 
-    # ---------------------------------------------------------------------
-    # Reviews
-    # ---------------------------------------------------------------------
+    # Review operations.
 
     def create_review(self, review_data):
         """Create a new review."""

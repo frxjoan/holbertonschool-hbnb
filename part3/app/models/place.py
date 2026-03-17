@@ -43,6 +43,7 @@ class Place(BaseModel):
         self.owner_id = self.validate_owner_id(owner_id)
 
     def validate_title(self, value):
+        """Validate the place title."""
         if not isinstance(value, str):
             raise TypeError("title must be a string")
         value = value.strip()
@@ -53,6 +54,7 @@ class Place(BaseModel):
         return value
 
     def validate_description(self, value):
+        """Validate and normalize the place description."""
         if value is None:
             return ""
         if not isinstance(value, str):
@@ -63,6 +65,7 @@ class Place(BaseModel):
         return value
 
     def validate_price(self, value):
+        """Validate the place nightly price."""
         if not isinstance(value, (float, int)):
             raise TypeError("price must be a number")
         value = float(value)
@@ -71,6 +74,7 @@ class Place(BaseModel):
         return value
 
     def validate_latitude(self, value):
+        """Validate latitude bounds."""
         if not isinstance(value, (float, int)):
             raise TypeError("latitude must be a number")
         value = float(value)
@@ -79,6 +83,7 @@ class Place(BaseModel):
         return value
 
     def validate_longitude(self, value):
+        """Validate longitude bounds."""
         if not isinstance(value, (float, int)):
             raise TypeError("longitude must be a number")
         value = float(value)
@@ -87,6 +92,7 @@ class Place(BaseModel):
         return value
 
     def validate_owner_id(self, value):
+        """Validate owner identifier."""
         if not isinstance(value, str):
             raise TypeError("owner_id must be a string")
         value = value.strip()
@@ -95,6 +101,7 @@ class Place(BaseModel):
         return value
 
     def update(self, data):
+        """Update mutable place fields and persist changes when needed."""
         if not isinstance(data, dict):
             raise TypeError("data must be a dict")
 
@@ -124,9 +131,11 @@ class Place(BaseModel):
             self.save()
 
     def add_review(self, review):
+        """Attach a review to this place and persist the relation."""
         self.reviews.append(review)
         self.save()
 
     def add_amenity(self, amenity):
+        """Attach an amenity to this place and persist the relation."""
         self.amenities.append(amenity)
         self.save()

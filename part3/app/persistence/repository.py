@@ -1,7 +1,7 @@
-"""Repository abstractions and in-memory implementation.
+"""Repository abstractions and concrete implementations.
 
-This module defines the repository contract and a simple in-memory storage
-implementation used by the service layer.
+This module defines the repository contract and provides two implementations:
+an in-memory repository and a SQLAlchemy-backed repository.
 """
 
 from abc import ABC, abstractmethod
@@ -142,20 +142,26 @@ class InMemoryRepository(Repository):
 
 class SQLAlchemyRepository(Repository):
     """Repository implementation using SQLAlchemy."""
+
     def __init__(self, model):
+        """Initialize the repository with a SQLAlchemy model class."""
         self.model = model
 
     def add(self, obj):
+        """Persist an object in the database session."""
         db.session.add(obj)
         db.session.commit()
 
     def get(self, obj_id):
+        """Return an object by ID, or ``None`` when missing."""
         return db.session.get(self.model, obj_id)
 
     def get_all(self):
+        """Return all persisted objects for the configured model."""
         return self.model.query.all()
 
     def update(self, obj_id, data):
+        """Apply partial updates to an object identified by ID."""
         obj = self.get(obj_id)
         if obj:
             if hasattr(obj, "update"):
@@ -167,10 +173,12 @@ class SQLAlchemyRepository(Repository):
             db.session.commit()
 
     def delete(self, obj_id):
+        """Delete an object by ID when it exists."""
         obj = self.get(obj_id)
         if obj:
             db.session.delete(obj)
             db.session.commit()
 
     def get_by_attribute(self, attr_name, attr_value):
+        """Return the first object where ``attr_name`` equals ``attr_value``."""
         return self.model.query.filter(getattr(self.model, attr_name) == attr_value).first()

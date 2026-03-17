@@ -35,7 +35,7 @@ class Amenity(BaseModel):
         super().__init__()
         self.name = self.validate_name(name)
 
-    # Validation helpers
+    # Validation helpers.
     def validate_name(self, name):
         """Validate and normalize the amenity name.
 
@@ -58,7 +58,7 @@ class Amenity(BaseModel):
 
         return name
 
-    # Mutation methods
+    # Mutation methods.
     def update(self, data):
         """Update allowed amenity attributes and persist changes.
 

@@ -48,11 +48,13 @@ class Review(BaseModel):
         return value
 
     def validate_fk_id(self, value, field_name):
+        """Validate a foreign-key identifier string."""
         if not isinstance(value, str) or not value.strip():
             raise ValueError(f"{field_name} must be a valid id")
         return value.strip()
 
     def update(self, data):
+        """Update mutable review fields and persist changes when needed."""
         if not isinstance(data, dict):
             raise TypeError("data must be a dict")
 

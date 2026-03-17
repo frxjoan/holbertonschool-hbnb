@@ -13,7 +13,7 @@ class User(BaseModel):
 
     __tablename__ = 'users'
 
-    # Simple email pattern for common cases
+    # Basic email pattern for common cases.
     EMAIL_PATTERN = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
 
     first_name = db.Column(db.String(50), nullable=False)
@@ -22,7 +22,7 @@ class User(BaseModel):
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
-    # Relationships with places and reviews tables
+    # Relationships to places and reviews tables.
     places = db.relationship(
         'Place',
         backref='owner',
@@ -105,7 +105,7 @@ class User(BaseModel):
         """
         if not isinstance(value, str):
             raise TypeError("last name must be a string")
-        # Remove surrounding spaces
+        # Remove leading and trailing spaces.
         value = value.strip()
         if not value:
             raise ValueError("last name is required")
@@ -130,7 +130,7 @@ class User(BaseModel):
         if " " in value:
             raise ValueError("email must not contain spaces")
 
-        # Reject invalid email formats
+        # Reject invalid email formats.
         if re.fullmatch(self.EMAIL_PATTERN, value) is None:
             raise ValueError("email format must be like john.doe@example.com")
         return value
@@ -181,6 +181,6 @@ class User(BaseModel):
                 self.hash_password(value)
                 changed = True
 
-        # Update timestamp only if something changed
+        # Update the timestamp only if something changed.
         if changed:
             self.save()
