@@ -350,6 +350,13 @@ select:hover {
   color: var(--accent-secondary);
 }
 
+.form-error {
+  min-height: 1.2em;
+  margin: 0 0 12px;
+  color: #fca5a5;
+  font-weight: 600;
+}
+
 .add-review {
   margin-top: 20px;
 }
