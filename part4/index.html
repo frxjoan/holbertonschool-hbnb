@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HBnB - Places</title>
+  <link rel="icon" href="assets/images/logo.png" type="image/png">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header>
+    <a href="index.html" aria-label="HBnB Home">
+      <img src="assets/images/logo.png" alt="HBnB logo" class="logo">
+    </a>
+    <a href="login.html" class="login-button">Login</a>
+  </header>
+
+  <nav aria-label="Main navigation">
+    <ul>
+      <li><a href="index.html" aria-current="page">Places</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="page-intro">
+      <h1>Explore Places</h1>
+      <p>Find your next stay from our curated listings.</p>
+    </section>
+
+    <section class="filters" aria-label="Filter places">
+      <label for="price-filter">Price Range</label>
+      <select id="price-filter" name="price">
+        <option value="all">All prices</option>
+        <option value="budget">Under $100</option>
+        <option value="mid-range">$100 - $200</option>
+        <option value="luxury">Over $200</option>
+      </select>
+    </section>
+
+    <section aria-label="Places list" class="places-grid">
+      <article class="place-card">
+        <h2>Sunny Loft</h2>
+        <p><strong>Price per night:</strong> $95</p>
+        <a class="details-button" href="place.html?id=1">View Details</a>
+      </article>
+
+      <article class="place-card">
+        <h2>Seaside Studio</h2>
+        <p><strong>Price per night:</strong> $130</p>
+        <a class="details-button" href="place.html?id=2">View Details</a>
+      </article>
+
+      <article class="place-card">
+        <h2>City Apartment</h2>
+        <p><strong>Price per night:</strong> $80</p>
+        <a class="details-button" href="place.html?id=3">View Details</a>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>All rights reserved.</p>
+  </footer>
+</body>
+</html>

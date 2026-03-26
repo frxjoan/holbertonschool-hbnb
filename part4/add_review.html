@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HBnB - Add Review</title>
+  <link rel="icon" href="assets/images/icon.png" type="image/png">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header>
+    <a href="index.html" aria-label="HBnB Home">
+      <img src="assets/images/logo.png" alt="HBnB logo" class="logo">
+    </a>
+    <a href="login.html" class="login-button">Login</a>
+  </header>
+
+  <nav aria-label="Main navigation">
+    <ul>
+      <li><a href="index.html">Places</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="add-review">
+      <h1>Add Review</h1>
+      <p>Share your experience for this place.</p>
+
+      <form class="form" action="#" method="post" novalidate>
+        <div class="form-row">
+          <label for="comment">Comment</label>
+          <textarea id="comment" name="comment" rows="5" required></textarea>
+        </div>
+
+        <div class="form-row">
+          <label for="rating">Rating</label>
+          <select id="rating" name="rating" required>
+            <option value="">Select a rating</option>
+            <option value="1">1 - Poor</option>
+            <option value="2">2 - Fair</option>
+            <option value="3">3 - Good</option>
+            <option value="4">4 - Very Good</option>
+            <option value="5">5 - Excellent</option>
+          </select>
+        </div>
+
+        <button type="submit" class="details-button">Submit Review</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>All rights reserved.</p>
+  </footer>
+</body>
+</html>

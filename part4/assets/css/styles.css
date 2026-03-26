@@ -1,0 +1,477 @@
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --text: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --muted: #94a3b8;
+  --accent: #06b6d4;
+  --accent-hover: #0891b2;
+  --accent-secondary: #f97316;
+  --line: #334155;
+  --success: #10b981;
+  --warning: #f59e0b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+  color: var(--text);
+  background: linear-gradient(135deg, #0f172a 0%, #1a1f35 50%, #0d1f2d 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: var(--surface);
+  border-bottom: 2px solid var(--accent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+header a[aria-label="HBnB Home"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+header a[aria-label="HBnB Home"]:hover {
+  transform: scale(1.08);
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  transition: filter 0.3s ease;
+}
+
+header a[aria-label="HBnB Home"]:hover .logo {
+  filter: brightness(1.2);
+}
+
+.login-button,
+.details-button,
+button {
+  border: none;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-button::before,
+.details-button::before,
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: left 0.4s ease;
+}
+
+.login-button:hover,
+.details-button:hover,
+button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(6, 182, 212, 0.5);
+  background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent) 100%);
+}
+
+.login-button:hover::before,
+.details-button:hover::before,
+button:hover::before {
+  left: 100%;
+}
+
+.login-button:active,
+.details-button:active,
+button:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+nav {
+  background: linear-gradient(90deg, rgba(30, 41, 59, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+}
+
+nav ul {
+  margin: 0;
+  padding: 12px 24px;
+  list-style: none;
+  display: flex;
+  gap: 28px;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 8px 0;
+  border-bottom: 3px solid transparent;
+  position: relative;
+}
+
+nav a:hover,
+nav a[aria-current="page"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+main {
+  width: min(1100px, 95%);
+  margin: 24px auto;
+  flex: 1;
+}
+
+.page-intro h1,
+.auth-section h1,
+.place-details h1,
+.add-review h1 {
+  margin-top: 0;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+select,
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  color: var(--text);
+  background: rgba(30, 41, 59, 0.5);
+  transition: all 0.3s ease;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(30, 41, 59, 0.8);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+  transform: scale(1.02);
+}
+
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2306b6d4' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+select:hover {
+  border-color: var(--accent);
+}
+
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.place-card {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.place-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.place-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 28px rgba(6, 182, 212, 0.2);
+  border-color: var(--accent);
+}
+
+.place-card:hover::before {
+  transform: scaleX(1);
+}
+
+.place-card h2 {
+  margin-top: 0;
+  color: var(--accent);
+  transition: color 0.3s ease;
+}
+
+.place-card:hover h2 {
+  color: var(--accent-secondary);
+}
+
+.place-details {
+  margin: 20px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.place-details:hover {
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.15);
+  border-color: var(--accent);
+}
+
+.place-details h1 {
+  color: var(--accent);
+  margin-top: 0;
+}
+
+.place-details h2 {
+  color: var(--accent-secondary);
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
+
+.place-info {
+  margin-bottom: 12px;
+}
+
+.review-card {
+  margin: 20px;
+  padding: 20px;
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.5);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.review-card::before {
+  content: '★';
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 24px;
+  color: var(--accent-secondary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.review-card:hover {
+  background: rgba(30, 41, 59, 0.8);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.1);
+}
+
+.review-card:hover::before {
+  opacity: 1;
+}
+
+.form {
+  background: rgba(30, 41, 59, 0.8);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 560px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.form:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.1);
+}
+
+.form-row {
+  margin-bottom: 18px;
+}
+
+.form-row label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: var(--accent);
+  transition: color 0.3s ease;
+}
+
+.form-row:focus-within label {
+  color: var(--accent-secondary);
+}
+
+.add-review {
+  margin-top: 20px;
+}
+
+footer {
+  border-top: 2px solid var(--accent);
+  background: var(--surface);
+  padding: 20px 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  margin-top: auto;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 900px) {
+  main {
+    width: min(100%, 90%);
+    margin: 20px auto;
+  }
+
+  .places-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  nav ul {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 700px) {
+  header {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    gap: 12px;
+  }
+
+  nav a {
+    font-size: 0.95rem;
+  }
+
+  .places-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .place-card,
+  .review-card,
+  .place-details {
+    margin: 12px 0;
+    padding: 16px;
+  }
+
+  .form {
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-review {
+    margin-top: 16px;
+  }
+
+  .login-button,
+  .details-button,
+  button {
+    width: 100%;
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  header {
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  nav ul {
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+
+  main {
+    margin: 12px auto;
+  }
+
+  .page-intro h1,
+  .place-details h1,
+  .add-review h1 {
+    font-size: 1.5rem;
+  }
+
+  .form {
+    padding: 12px;
+  }
+
+  select,
+  input,
+  textarea {
+    padding: 10px;
+  }
+}
