@@ -6,6 +6,7 @@ from flask_restx import Api
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 bcrypt = Bcrypt()
 jwt = JWTManager()
@@ -22,6 +23,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     """Create and configure the Flask application."""
     app = Flask(__name__)
     app.config.from_object(config_class)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     authorizations = {
         "Bearer": {

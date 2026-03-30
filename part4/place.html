@@ -12,68 +12,54 @@
     <a href="index.html" aria-label="HBnB Home">
       <img src="assets/images/logo.png" alt="HBnB logo" class="logo">
     </a>
-    <a href="login.html" class="login-button">Login</a>
+    <a href="login.html" class="login-button auth-login-link">Login</a>
   </header>
 
   <nav aria-label="Main navigation">
     <ul>
       <li><a href="index.html">Places</a></li>
-      <li><a href="login.html">Login</a></li>
+      <li><a href="login.html" class="auth-login-link">Login</a></li>
     </ul>
   </nav>
 
   <main>
-    <article class="place-details">
-      <h1>Sunny Loft</h1>
+    <article class="place-details" id="place-details">
+      <h1 id="place-title">Place details</h1>
 
       <div class="place-info">
         <h2>Host</h2>
-        <p>Hosted by Alice Owner</p>
+        <p id="place-host">Loading...</p>
       </div>
 
       <div class="place-info">
         <h2>Price</h2>
-        <p>$95 per night</p>
+        <p id="place-price">Loading...</p>
       </div>
 
       <div class="place-info">
         <h2>Description</h2>
-        <p>Bright loft in the city center with balcony, equipped kitchen, and fast Wi-Fi.</p>
+        <p id="place-description">Loading...</p>
       </div>
 
       <div class="place-info">
         <h2>Amenities</h2>
-        <ul>
-          <li>Wi-Fi</li>
-          <li>Air Conditioning</li>
-          <li>Kitchen</li>
-        </ul>
+        <ul id="place-amenities"></ul>
       </div>
     </article>
 
     <section aria-label="Reviews">
       <h2>Reviews</h2>
-
-      <article class="review-card">
-        <p>Great location and super clean place.</p>
-        <p><strong>User:</strong> Bob Reviewer</p>
-        <p><strong>Rating:</strong> 5/5</p>
-      </article>
-
-      <article class="review-card">
-        <p>Comfortable stay, would come back.</p>
-        <p><strong>User:</strong> Emma Travel</p>
-        <p><strong>Rating:</strong> 4/5</p>
-      </article>
+      <div id="reviews-list"></div>
     </section>
 
     <section class="add-review" aria-label="Add review access">
-      <a href="add_review.html" class="details-button">Add Review</a>
+      <a href="add_review.html" class="details-button" id="add-review-link">Add Review</a>
     </section>
   </main>
 
   <footer>
     <p>All rights reserved.</p>
   </footer>
+  <script src="assets/js/scripts.js"></script>
 </body>
 </html>

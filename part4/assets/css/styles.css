@@ -1,15 +1,16 @@
 :root {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --text: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --muted: #94a3b8;
-  --accent: #06b6d4;
-  --accent-hover: #0891b2;
-  --accent-secondary: #f97316;
-  --line: #334155;
-  --success: #10b981;
-  --warning: #f59e0b;
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --surface-alt: #eef2f7;
+  --text: #1f2937;
+  --text-secondary: #4b5563;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-secondary: #0f766e;
+  --line: #dbe4ef;
+  --success: #2f9e44;
+  --warning: #d97706;
 }
 
 * {
@@ -18,9 +19,11 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+  font-family: "Source Sans 3", "Trebuchet MS", sans-serif;
   color: var(--text);
-  background: linear-gradient(135deg, #0f172a 0%, #1a1f35 50%, #0d1f2d 100%);
+  background:
+    radial-gradient(circle at 15% 10%, #ffffff 0%, rgba(255, 255, 255, 0) 45%),
+    linear-gradient(180deg, #f8fbff 0%, #edf3fa 100%);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -32,88 +35,65 @@ header {
   align-items: center;
   padding: 16px 24px;
   background: var(--surface);
-  border-bottom: 2px solid var(--accent);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 6px 20px rgba(60, 40, 15, 0.06);
 }
 
 header a[aria-label="HBnB Home"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
 header a[aria-label="HBnB Home"]:hover {
-  transform: scale(1.08);
+  transform: translateY(-1px);
 }
 
 .logo {
   width: 80px;
   height: 80px;
   object-fit: contain;
-  transition: filter 0.3s ease;
+  transition: filter 0.2s ease;
 }
 
 header a[aria-label="HBnB Home"]:hover .logo {
-  filter: brightness(1.2);
+  filter: saturate(1.05);
 }
 
 .login-button,
 .details-button,
 button {
-  border: none;
+  border: 1px solid transparent;
   text-decoration: none;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  background: var(--accent);
   color: #fff;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
   cursor: pointer;
   display: inline-block;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.login-button::before,
-.details-button::before,
-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.2);
-  transition: left 0.4s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .login-button:hover,
 .details-button:hover,
 button:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(6, 182, 212, 0.5);
-  background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent) 100%);
-}
-
-.login-button:hover::before,
-.details-button:hover::before,
-button:hover::before {
-  left: 100%;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+  background: var(--accent-hover);
 }
 
 .login-button:active,
 .details-button:active,
 button:active {
-  transform: translateY(-1px) scale(0.98);
+  transform: translateY(0);
 }
 
 nav {
-  background: linear-gradient(90deg, rgba(30, 41, 59, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+  background: var(--surface-alt);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(10px);
 }
 
 nav ul {
@@ -128,27 +108,15 @@ nav a {
   text-decoration: none;
   color: var(--text-secondary);
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: color 0.2s ease, border-color 0.2s ease;
   padding: 8px 0;
-  border-bottom: 3px solid transparent;
-  position: relative;
+  border-bottom: 2px solid transparent;
 }
 
 nav a:hover,
 nav a[aria-current="page"] {
   color: var(--accent);
   border-bottom-color: var(--accent);
-}
-
-nav a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 3px;
-  background: var(--accent);
-  transition: width 0.3s ease;
 }
 
 main {
@@ -176,12 +144,12 @@ input,
 textarea {
   width: 100%;
   padding: 12px;
-  border: 2px solid var(--line);
+  border: 1px solid var(--line);
   border-radius: 8px;
   font: inherit;
   color: var(--text);
-  background: rgba(30, 41, 59, 0.5);
-  transition: all 0.3s ease;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 select:focus,
@@ -189,15 +157,13 @@ input:focus,
 textarea:focus {
   outline: none;
   border-color: var(--accent);
-  background: rgba(30, 41, 59, 0.8);
-  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
-  transform: scale(1.02);
+  box-shadow: 0 0 0 3px rgba(31, 122, 107, 0.16);
 }
 
 select {
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2306b6d4' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231f7a6b' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 36px;
@@ -214,48 +180,23 @@ select:hover {
 }
 
 .place-card {
-  margin: 20px;
+  margin: 0;
   padding: 20px;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--surface);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.place-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease;
+  box-shadow: 0 6px 18px rgba(31, 41, 55, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .place-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 28px rgba(6, 182, 212, 0.2);
-  border-color: var(--accent);
-}
-
-.place-card:hover::before {
-  transform: scaleX(1);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(31, 41, 55, 0.14);
 }
 
 .place-card h2 {
   margin-top: 0;
   color: var(--accent);
-  transition: color 0.3s ease;
-}
-
-.place-card:hover h2 {
-  color: var(--accent-secondary);
 }
 
 .place-details {
@@ -264,13 +205,7 @@ select:hover {
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--surface);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-}
-
-.place-details:hover {
-  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.15);
-  border-color: var(--accent);
+  box-shadow: 0 6px 18px rgba(31, 41, 55, 0.08);
 }
 
 .place-details h1 {
@@ -293,45 +228,28 @@ select:hover {
   padding: 20px;
   border-left: 4px solid var(--accent);
   border-radius: 8px;
-  background: rgba(30, 41, 59, 0.5);
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.review-card::before {
-  content: '★';
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  font-size: 24px;
-  color: var(--accent-secondary);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  background: #ffffff;
+  color: var(--text);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .review-card:hover {
-  background: rgba(30, 41, 59, 0.8);
-  transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.1);
+  background: #f4f8ff;
+  color: var(--text);
 }
 
-.review-card:hover::before {
-  opacity: 1;
+.review-card p,
+.review-card strong {
+  color: inherit;
 }
 
 .form {
-  background: rgba(30, 41, 59, 0.8);
-  border: 2px solid var(--line);
+  background: #fff;
+  border: 1px solid var(--line);
   border-radius: 12px;
   padding: 24px;
   max-width: 560px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-}
-
-.form:hover {
-  border-color: var(--accent);
-  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.1);
+  box-shadow: 0 6px 18px rgba(31, 41, 55, 0.08);
 }
 
 .form-row {
@@ -342,19 +260,19 @@ select:hover {
   display: block;
   margin-bottom: 8px;
   font-weight: 700;
-  color: var(--accent);
-  transition: color 0.3s ease;
-}
-
-.form-row:focus-within label {
-  color: var(--accent-secondary);
+  color: #3b3630;
 }
 
 .form-error {
   min-height: 1.2em;
   margin: 0 0 12px;
-  color: #fca5a5;
+  color: #b42318;
   font-weight: 600;
+}
+
+.empty-state {
+  margin: 6px 0;
+  color: var(--text-secondary);
 }
 
 .add-review {
@@ -362,13 +280,13 @@ select:hover {
 }
 
 footer {
-  border-top: 2px solid var(--accent);
+  border-top: 1px solid var(--line);
   background: var(--surface);
   padding: 20px 24px;
   text-align: center;
   color: var(--text-secondary);
   margin-top: auto;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 -4px 16px rgba(31, 41, 55, 0.05);
 }
 
 @media (max-width: 900px) {
@@ -436,7 +354,7 @@ footer {
   .login-button,
   .details-button,
   button {
-    width: 100%;
+    width: auto;
     padding: 14px 16px;
   }
 }
