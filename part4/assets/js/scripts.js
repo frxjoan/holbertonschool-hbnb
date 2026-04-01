@@ -1,5 +1,41 @@
 const API_BASE_URL = "http://localhost:5000/api/v1";
 
+// Theme management
+function initializeTheme() {
+	const savedTheme = localStorage.getItem("theme") || "light";
+	document.documentElement.setAttribute("data-theme", savedTheme);
+	updateThemeButton(savedTheme);
+}
+
+function toggleTheme() {
+	const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+	const newTheme = currentTheme === "light" ? "dark" : "light";
+	document.documentElement.setAttribute("data-theme", newTheme);
+	localStorage.setItem("theme", newTheme);
+	updateThemeButton(newTheme);
+}
+
+function updateThemeButton(theme) {
+	const button = document.getElementById("theme-toggle");
+	if (button) {
+		button.textContent = theme === "dark" ? "☀️ Light" : "🌙 Dark";
+		button.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} mode`);
+	}
+}
+
+function setupThemeToggle() {
+	const themeButton = document.getElementById("theme-toggle");
+	if (themeButton) {
+		themeButton.addEventListener("click", toggleTheme);
+	}
+}
+
+// Initialize theme on page load
+document.addEventListener("DOMContentLoaded", () => {
+	initializeTheme();
+	setupThemeToggle();
+});
+
 function setTokenCookie(token) {
 	document.cookie = `token=${encodeURIComponent(token)}; path=/; SameSite=Lax`;
 }
@@ -120,7 +156,7 @@ async function fetchPlaceReviews(placeId) {
 	return Array.isArray(data) ? data : [];
 }
 
-function renderPlaces(places) {
+async function renderPlaces(places) {
 	const placesList = document.getElementById("places-list");
 
 	if (!placesList) {
@@ -142,8 +178,10 @@ function renderPlaces(places) {
 		const description = place.description || "No description available.";
 		const titleElement = document.createElement("h2");
 		const descriptionElement = document.createElement("p");
+		const ratingElement = document.createElement("p");
 		const priceElement = document.createElement("p");
-		const priceLabel = document.createElement("strong");
+		const priceLabel = document.createElement("span");
+		const priceValue = document.createElement("span");
 		const detailsLink = document.createElement("a");
 
 		card.className = "place-card";
@@ -152,15 +190,38 @@ function renderPlaces(places) {
 		titleElement.textContent = placeTitle;
 		descriptionElement.textContent = description;
 
-		priceLabel.textContent = "Price per night:";
-		priceElement.append(priceLabel, ` $${placePrice}`);
+		ratingElement.className = "place-rating";
+		ratingElement.innerHTML = '<span class="rating-loader">⭐ Loading...</span>';
+
+		priceLabel.textContent = "Price: ";
+		priceValue.className = "price-value";
+		priceValue.textContent = `$${placePrice}/night`;
+		priceElement.className = "place-price";
+		priceElement.append(priceLabel, priceValue);
 
 		detailsLink.className = "details-button";
 		detailsLink.href = `place.html?id=${encodeURIComponent(place.id)}`;
 		detailsLink.textContent = "View details";
 
-		card.append(titleElement, descriptionElement, priceElement, detailsLink);
+		card.append(titleElement, descriptionElement, ratingElement, priceElement, detailsLink);
 		placesList.appendChild(card);
+
+		try {
+			const reviews = await fetchPlaceReviews(place.id);
+			let avgRating = 0;
+			let reviewCount = 0;
+
+			if (Array.isArray(reviews) && reviews.length > 0) {
+				const totalRating = reviews.reduce((sum, r) => sum + Number(r.rating || 0), 0);
+				avgRating = (totalRating / reviews.length).toFixed(1);
+				reviewCount = reviews.length;
+				ratingElement.innerHTML = `<span class="rating-stars">⭐ ${avgRating}</span> <span class="review-count">(${reviewCount})</span>`;
+			} else {
+				ratingElement.innerHTML = '<span class="no-reviews">No reviews yet</span>';
+			}
+		} catch (error) {
+			ratingElement.innerHTML = '<span class="no-reviews">—</span>';
+		}
 	}
 }
 

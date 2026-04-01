@@ -5,16 +5,27 @@
   --text: #1f2937;
   --text-secondary: #4b5563;
   --muted: #6b7280;
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
+  --accent: #ff385c;
+  --accent-hover: #e5234a;
   --accent-secondary: #0f766e;
   --line: #dbe4ef;
   --success: #2f9e44;
   --warning: #d97706;
 }
 
+html[data-theme="dark"] {
+  --bg: #0f1419;
+  --surface: #1a1a2e;
+  --surface-alt: #16213e;
+  --text: #e9ecef;
+  --text-secondary: #a8b2c1;
+  --muted: #6b7280;
+  --line: #2d3748;
+}
+
 * {
   box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 body {
@@ -27,6 +38,13 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 15% 10%, #1a1a2e 0%, rgba(26, 26, 46, 0) 45%),
+    linear-gradient(180deg, #0f1419 0%, #1a2a3e 100%);
 }
 
 header {
@@ -79,6 +97,29 @@ header a[aria-label="HBnB Home"]:hover {
 
 header a[aria-label="HBnB Home"]:hover .logo {
   filter: saturate(1.05);
+}
+
+.theme-toggle {
+  background: var(--surface-alt);
+  color: var(--text-secondary);
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  box-shadow: none;
+}
+
+.theme-toggle:hover {
+  background: var(--line);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
 }
 
 .login-button,
@@ -213,6 +254,9 @@ select:hover {
   background: var(--surface);
   box-shadow: 0 6px 18px rgba(31, 41, 55, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .place-card:hover {
@@ -223,6 +267,60 @@ select:hover {
 .place-card h2 {
   margin-top: 0;
   color: var(--accent);
+  font-size: 1.1rem;
+}
+
+.place-card p {
+  margin: 8px 0;
+}
+
+.place-rating {
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  height: 1.4em;
+}
+
+.rating-stars {
+  color: #ff385c;
+  font-size: 0.95rem;
+}
+
+.review-count {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.no-reviews {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.rating-loader {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.place-price {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+  margin: 12px 0 !important;
+  font-size: 1.1rem;
+}
+
+.price-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: inline;
+}
+
+.place-card .details-button {
+  margin-top: auto;
 }
 
 .place-details {
@@ -333,6 +431,67 @@ select:hover {
   box-shadow: none;
 }
 
+.review-edit-button {
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent);
+  padding: 8px 10px;
+  box-shadow: none;
+  display: block;
+}
+
+.review-edit-button:hover {
+  background: #eff6ff;
+  box-shadow: none;
+}
+
+.review-edit-form {
+  background: #f8fbff;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.review-edit-form .form-row {
+  margin-bottom: 12px;
+}
+
+.review-edit-form .form-row:last-child {
+  margin-bottom: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.review-edit-form button {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.review-save-button {
+  background: var(--success);
+}
+
+.review-save-button:hover {
+  background: #27ae40;
+}
+
+.review-cancel-button {
+  background: var(--muted);
+}
+
+.review-cancel-button:hover {
+  background: #495057;
+}
+
+.review-edit-message {
+  margin-top: 8px;
+  font-size: 0.85rem;
+}
+
 .is-hidden {
   display: none;
 }
@@ -362,6 +521,17 @@ select:hover {
 }
 
 .amenity-option input {
+  width: auto;
+  margin: 0;
+}
+
+.amenities-checklist {
+  display: grid;
+  gap: 8px;
+  background: #fff;
+}
+
+.profile-amenity-checkbox {
   width: auto;
   margin: 0;
 }
