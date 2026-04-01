@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HBnB - Add Review</title>
+  <title>HBnB - Profile</title>
   <link rel="icon" href="assets/images/icon.png" type="image/png">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-<body>
+<body id="profile-page">
   <header>
     <a href="index.html" aria-label="HBnB Home">
       <img src="assets/images/logo.png" alt="HBnB logo" class="logo">
@@ -15,7 +15,7 @@
     <div class="header-actions">
       <a href="login.html" class="login-button auth-login-link">Sign In</a>
       <a href="login.html#signup-section" class="login-button auth-signin-link">Sign Up</a>
-      <a href="profile.html" class="auth-user-name auth-profile-link" style="display: none;"></a>
+      <a href="profile.html" class="auth-user-name auth-profile-link" aria-current="page" style="display: none;"></a>
       <a href="#" class="login-button auth-logout-link" style="display: none;">Logout</a>
     </div>
   </header>
@@ -26,38 +26,43 @@
       <li><a href="login.html" class="auth-login-link">Sign In</a></li>
       <li><a href="login.html#signup-section" class="auth-signin-link">Sign Up</a></li>
       <li><a href="create_place.html" class="auth-create-place-link" style="display: none;">Create Place</a></li>
-      <li><a href="profile.html" class="auth-profile-link" style="display: none;">Profile</a></li>
+      <li><a href="profile.html" class="auth-profile-link" aria-current="page" style="display: none;">Profile</a></li>
       <li><a href="#" class="auth-logout-link" style="display: none;">Logout</a></li>
     </ul>
   </nav>
 
   <main>
-    <section class="add-review">
-      <h1>Add Review</h1>
-      <p id="review-place-name">Share your experience for this place.</p>
-
-      <form id="review-form" class="form" action="#" method="post" novalidate>
+    <section class="auth-section profile-section">
+      <h1>My Profile</h1>
+      <form id="profile-user-form" class="form" action="#" method="post" novalidate>
         <div class="form-row">
-          <label for="comment">Comment</label>
-          <textarea id="comment" name="comment" rows="5" required></textarea>
+          <label for="profile-first-name">First Name</label>
+          <input id="profile-first-name" name="first_name" type="text" required>
         </div>
 
         <div class="form-row">
-          <label for="rating">Rating</label>
-          <select id="rating" name="rating" required>
-            <option value="">Select a rating</option>
-            <option value="1">1 - Poor</option>
-            <option value="2">2 - Fair</option>
-            <option value="3">3 - Good</option>
-            <option value="4">4 - Very Good</option>
-            <option value="5">5 - Excellent</option>
-          </select>
+          <label for="profile-last-name">Last Name</label>
+          <input id="profile-last-name" name="last_name" type="text" required>
         </div>
 
-        <p id="review-message" class="form-error" role="alert" aria-live="polite"></p>
+        <p id="profile-user-message" class="form-error" role="alert" aria-live="polite"></p>
 
-        <button type="submit" class="details-button">Submit Review</button>
+        <button type="submit" class="details-button">Save Profile</button>
       </form>
+    </section>
+
+    <section class="profile-section" aria-label="My places">
+      <h2>My Places</h2>
+      <div id="profile-places-list" class="profile-list">
+        <p class="empty-state">Loading your places...</p>
+      </div>
+    </section>
+
+    <section class="profile-section" aria-label="My reviews">
+      <h2>My Reviews</h2>
+      <div id="profile-reviews-list" class="profile-list">
+        <p class="empty-state">Loading your reviews...</p>
+      </div>
     </section>
   </main>
 

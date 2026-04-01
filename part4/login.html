@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HBnB - Login</title>
+  <title>HBnB - Sign In / Sign Up</title>
   <link rel="icon" href="assets/images/icon.png" type="image/png">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
@@ -12,35 +12,75 @@
     <a href="index.html" aria-label="HBnB Home">
       <img src="assets/images/logo.png" alt="HBnB logo" class="logo">
     </a>
-    <a href="login.html" class="login-button auth-login-link" aria-current="page">Login</a>
+    <div class="header-actions">
+      <a href="login.html" class="login-button auth-login-link" aria-current="page">Sign In</a>
+      <a href="login.html#signup-section" class="login-button auth-signin-link">Sign Up</a>
+      <a href="profile.html" class="auth-user-name auth-profile-link" style="display: none;"></a>
+      <a href="#" class="login-button auth-logout-link" style="display: none;">Logout</a>
+    </div>
   </header>
 
   <nav aria-label="Main navigation">
     <ul>
       <li><a href="index.html">Places</a></li>
-      <li><a href="login.html" class="auth-login-link" aria-current="page">Login</a></li>
+      <li><a href="login.html" class="auth-login-link" aria-current="page">Sign In</a></li>
+      <li><a href="login.html#signup-section" class="auth-signin-link">Sign Up</a></li>
+      <li><a href="create_place.html" class="auth-create-place-link" style="display: none;">Create Place</a></li>
+      <li><a href="profile.html" class="auth-profile-link" style="display: none;">Profile</a></li>
+      <li><a href="#" class="auth-logout-link" style="display: none;">Logout</a></li>
     </ul>
   </nav>
 
   <main>
-    <section class="auth-section">
-      <h1>Login</h1>
-      <form id="login-form" class="form" action="#" method="post" novalidate>
-        <div class="form-row">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" required autocomplete="email">
-        </div>
+    <div class="auth-columns">
+      <section class="auth-section">
+        <h1>Sign In</h1>
+        <form id="login-form" class="form" action="#" method="post" novalidate>
+          <div class="form-row">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required autocomplete="email">
+          </div>
 
-        <div class="form-row">
-          <label for="password">Password</label>
-          <input id="password" name="password" type="password" required autocomplete="current-password">
-        </div>
+          <div class="form-row">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required autocomplete="current-password">
+          </div>
 
-        <p id="login-error" class="form-error" role="alert" aria-live="polite"></p>
+          <p id="login-error" class="form-error" role="alert" aria-live="polite"></p>
 
-        <button type="submit" class="details-button">Sign In</button>
-      </form>
-    </section>
+          <button type="submit" class="details-button">Sign In</button>
+        </form>
+      </section>
+
+      <section class="auth-section" id="signup-section">
+        <h1>Sign Up</h1>
+        <form id="signup-form" class="form" action="#" method="post" novalidate>
+          <div class="form-row">
+            <label for="signup-first-name">First Name</label>
+            <input id="signup-first-name" name="first_name" type="text" required autocomplete="given-name">
+          </div>
+
+          <div class="form-row">
+            <label for="signup-last-name">Last Name</label>
+            <input id="signup-last-name" name="last_name" type="text" required autocomplete="family-name">
+          </div>
+
+          <div class="form-row">
+            <label for="signup-email">Email</label>
+            <input id="signup-email" name="email" type="email" required autocomplete="email">
+          </div>
+
+          <div class="form-row">
+            <label for="signup-password">Password</label>
+            <input id="signup-password" name="password" type="password" required autocomplete="new-password">
+          </div>
+
+          <p id="signup-message" class="form-error" role="alert" aria-live="polite"></p>
+
+          <button type="submit" class="details-button">Sign Up</button>
+        </form>
+      </section>
+    </div>
   </main>
 
   <footer>

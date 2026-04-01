@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HBnB - Create Place</title>
+  <link rel="icon" href="assets/images/icon.png" type="image/png">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header>
+    <a href="index.html" aria-label="HBnB Home">
+      <img src="assets/images/logo.png" alt="HBnB logo" class="logo">
+    </a>
+    <div class="header-actions">
+      <a href="login.html" class="login-button auth-login-link">Sign In</a>
+      <a href="login.html#signup-section" class="login-button auth-signin-link">Sign Up</a>
+      <a href="profile.html" class="auth-user-name auth-profile-link" style="display: none;"></a>
+      <a href="#" class="login-button auth-logout-link" style="display: none;">Logout</a>
+    </div>
+  </header>
+
+  <nav aria-label="Main navigation">
+    <ul>
+      <li><a href="index.html">Places</a></li>
+      <li><a href="login.html" class="auth-login-link">Sign In</a></li>
+      <li><a href="login.html#signup-section" class="auth-signin-link">Sign Up</a></li>
+      <li><a href="create_place.html" class="auth-create-place-link" aria-current="page" style="display: none;">Create Place</a></li>
+      <li><a href="profile.html" class="auth-profile-link" style="display: none;">Profile</a></li>
+      <li><a href="#" class="auth-logout-link" style="display: none;">Logout</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="auth-section">
+      <h1>Create Place</h1>
+      <form id="create-place-form" class="form" action="#" method="post" novalidate>
+        <div class="form-row">
+          <label for="place-title-input">Title</label>
+          <input id="place-title-input" name="title" type="text" required>
+        </div>
+
+        <div class="form-row">
+          <label for="place-description-input">Description</label>
+          <textarea id="place-description-input" name="description" rows="4"></textarea>
+        </div>
+
+        <div class="form-row">
+          <label for="place-price-input">Price</label>
+          <input id="place-price-input" name="price" type="number" min="0" step="0.01" required>
+        </div>
+
+        <div class="form-row">
+          <label for="place-latitude-input">Latitude</label>
+          <input id="place-latitude-input" name="latitude" type="number" min="-90" max="90" step="0.000001" required>
+        </div>
+
+        <div class="form-row">
+          <label for="place-longitude-input">Longitude</label>
+          <input id="place-longitude-input" name="longitude" type="number" min="-180" max="180" step="0.000001" required>
+        </div>
+
+        <div class="form-row">
+          <label>Amenities</label>
+          <div id="place-amenities-checklist" class="amenity-checklist" aria-live="polite">
+            <p class="empty-state">Loading amenities...</p>
+          </div>
+        </div>
+
+        <p id="create-place-message" class="form-error" role="alert" aria-live="polite"></p>
+
+        <button type="submit" class="details-button">Create Place</button>
+      </form>
+
+      <section id="admin-amenity-section" class="admin-panel" style="display: none;">
+        <h2>Admin: Create Amenity</h2>
+        <form id="create-amenity-form" class="form" action="#" method="post" novalidate>
+          <div class="form-row">
+            <label for="amenity-name-input">Amenity name</label>
+            <input id="amenity-name-input" name="amenity_name" type="text" required>
+          </div>
+
+          <p id="create-amenity-message" class="form-error" role="alert" aria-live="polite"></p>
+
+          <button type="submit" class="details-button">Create Amenity</button>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>All rights reserved.</p>
+  </footer>
+  <script src="assets/js/scripts.js"></script>
+</body>
+</html>
