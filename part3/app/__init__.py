@@ -6,6 +6,7 @@ from flask_restx import Api
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 bcrypt = Bcrypt()
 jwt = JWTManager()
@@ -22,6 +23,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     """Create and configure the Flask application."""
     app = Flask(__name__)
     app.config.from_object(config_class)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     authorizations = {
         "Bearer": {
@@ -52,20 +54,26 @@ def create_app(config_class="config.DevelopmentConfig"):
     jwt.init_app(app)
     db.init_app(app)
 
-    @jwt.unauthorized_loader
-    def unauthorized_callback(reason):
-        return {"error": reason}, 401
-
-    @jwt.invalid_token_loader
-    def invalid_token_callback(reason):
-        return {"error": reason}, 422
-
-    @jwt.expired_token_loader
-    def expired_token_callback(_jwt_header, _jwt_payload):
-        return {"error": "Token has expired"}, 401
-
-    @jwt.needs_fresh_token_loader
-    def needs_fresh_token_callback(_jwt_header, _jwt_payload):
-        return {"error": "Fresh token required"}, 401
-
     return app
+
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    return {"error": "Session expired. Please sign in again."}, 401
+
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    return {"error": "Invalid token. Please sign in again."}, 401
+
+
+@jwt.unauthorized_loader
+def missing_token_callback(error):
+    return {"error": "Authentication required."}, 401
+
+@jwt.needs_fresh_token_loader
+def needs_fresh_token_callback(_jwt_header, _jwt_payload):
+    return {"error": "Fresh token required"}, 401
+
+@jwt.revoked_token_loader
+def revoked_token_callback(jwt_header, jwt_payload):
+    return {"error": "Token has been revoked."}, 401

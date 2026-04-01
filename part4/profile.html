@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HBnB - Profile</title>
+  <link rel="icon" href="assets/images/icon.png" type="image/png">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body id="profile-page">
+  <header>
+    <a href="index.html" aria-label="HBnB Home">
+      <img src="assets/images/logo.png" alt="HBnB logo" class="logo">
+    </a>
+    <div class="header-actions">
+      <a href="login.html" class="login-button auth-login-link">Sign In</a>
+      <a href="login.html#signup-section" class="login-button auth-signin-link">Sign Up</a>
+      <a href="profile.html" class="auth-user-name auth-profile-link" aria-current="page" style="display: none;"></a>
+      <a href="#" class="login-button auth-logout-link" style="display: none;">Logout</a>
+    </div>
+  </header>
+
+  <nav aria-label="Main navigation">
+    <ul>
+      <li><a href="index.html">Places</a></li>
+      <li><a href="login.html" class="auth-login-link">Sign In</a></li>
+      <li><a href="login.html#signup-section" class="auth-signin-link">Sign Up</a></li>
+      <li><a href="create_place.html" class="auth-create-place-link" style="display: none;">Create Place</a></li>
+      <li><a href="profile.html" class="auth-profile-link" aria-current="page" style="display: none;">Profile</a></li>
+      <li><a href="#" class="auth-logout-link" style="display: none;">Logout</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="auth-section profile-section">
+      <h1>My Profile</h1>
+      <form id="profile-user-form" class="form" action="#" method="post" novalidate>
+        <div class="form-row">
+          <label for="profile-first-name">First Name</label>
+          <input id="profile-first-name" name="first_name" type="text" required>
+        </div>
+
+        <div class="form-row">
+          <label for="profile-last-name">Last Name</label>
+          <input id="profile-last-name" name="last_name" type="text" required>
+        </div>
+
+        <p id="profile-user-message" class="form-error" role="alert" aria-live="polite"></p>
+
+        <button type="submit" class="details-button">Save Profile</button>
+      </form>
+    </section>
+
+    <section class="profile-section" aria-label="My places">
+      <h2>My Places</h2>
+      <div id="profile-places-list" class="profile-list">
+        <p class="empty-state">Loading your places...</p>
+      </div>
+    </section>
+
+    <section class="profile-section" aria-label="My reviews">
+      <h2>My Reviews</h2>
+      <div id="profile-reviews-list" class="profile-list">
+        <p class="empty-state">Loading your reviews...</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>All rights reserved.</p>
+  </footer>
+  <script src="assets/js/scripts.js"></script>
+</body>
+</html>

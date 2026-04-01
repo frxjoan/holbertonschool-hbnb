@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HBnB - Add Review</title>
+  <link rel="icon" href="assets/images/icon.png" type="image/png">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header>
+    <a href="index.html" aria-label="HBnB Home">
+      <img src="assets/images/logo.png" alt="HBnB logo" class="logo">
+    </a>
+    <div class="header-actions">
+      <a href="login.html" class="login-button auth-login-link">Sign In</a>
+      <a href="login.html#signup-section" class="login-button auth-signin-link">Sign Up</a>
+      <a href="profile.html" class="auth-user-name auth-profile-link" style="display: none;"></a>
+      <a href="#" class="login-button auth-logout-link" style="display: none;">Logout</a>
+    </div>
+  </header>
+
+  <nav aria-label="Main navigation">
+    <ul>
+      <li><a href="index.html">Places</a></li>
+      <li><a href="login.html" class="auth-login-link">Sign In</a></li>
+      <li><a href="login.html#signup-section" class="auth-signin-link">Sign Up</a></li>
+      <li><a href="create_place.html" class="auth-create-place-link" style="display: none;">Create Place</a></li>
+      <li><a href="profile.html" class="auth-profile-link" style="display: none;">Profile</a></li>
+      <li><a href="#" class="auth-logout-link" style="display: none;">Logout</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="add-review">
+      <h1>Add Review</h1>
+      <p id="review-place-name">Share your experience for this place.</p>
+
+      <form id="review-form" class="form" action="#" method="post" novalidate>
+        <div class="form-row">
+          <label for="comment">Comment</label>
+          <textarea id="comment" name="comment" rows="5" required></textarea>
+        </div>
+
+        <div class="form-row">
+          <label for="rating">Rating</label>
+          <select id="rating" name="rating" required>
+            <option value="">Select a rating</option>
+            <option value="1">1 - Poor</option>
+            <option value="2">2 - Fair</option>
+            <option value="3">3 - Good</option>
+            <option value="4">4 - Very Good</option>
+            <option value="5">5 - Excellent</option>
+          </select>
+        </div>
+
+        <p id="review-message" class="form-error" role="alert" aria-live="polite"></p>
+
+        <button type="submit" class="details-button">Submit Review</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>All rights reserved.</p>
+  </footer>
+  <script src="assets/js/scripts.js"></script>
+</body>
+</html>
