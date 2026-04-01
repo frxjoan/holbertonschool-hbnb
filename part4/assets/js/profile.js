@@ -1,3 +1,42 @@
+async function fetchUserById(userId) {
+  const response = await fetch(`${API_BASE_URL}/users/${encodeURIComponent(userId)}`, {
+    headers: getAuthHeaders()
+  });
+
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (error) {
+    data = {};
+  }
+
+  if (!response.ok) {
+    throw new Error(data.error || "Failed to fetch user.");
+  }
+
+  return data;
+}
+
+async function fetchAmenities() {
+  const response = await fetch(`${API_BASE_URL}/amenities/`, {
+    method: "GET",
+    headers: getAuthHeaders()
+  });
+
+  let data = [];
+  try {
+    data = await response.json();
+  } catch (error) {
+    data = [];
+  }
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch amenities.");
+  }
+
+  return Array.isArray(data) ? data : [];
+}
+
 async function updateCurrentUser(userId, firstName, lastName) {
   const response = await fetch(`${API_BASE_URL}/users/${encodeURIComponent(userId)}`, {
     method: "PUT",
@@ -73,7 +112,7 @@ async function updateReview(reviewId, payload) {
   return data;
 }
 
-function renderProfilePlaces(places) {
+function renderProfilePlaces(places, allAmenities = []) {
   const container = document.getElementById("profile-places-list");
 
   if (!container) {
@@ -94,6 +133,28 @@ function renderProfilePlaces(places) {
     const priceId = `profile-place-price-${place.id}`;
     const latitudeId = `profile-place-latitude-${place.id}`;
     const longitudeId = `profile-place-longitude-${place.id}`;
+    const amenitiesId = `profile-place-amenities-${place.id}`;
+
+    const currentAmenityIds = Array.isArray(place.amenities) 
+      ? place.amenities.map(a => String(a.id || a)) 
+      : [];
+
+    let amenitiesHTML = "";
+    if (Array.isArray(allAmenities) && allAmenities.length > 0) {
+      amenitiesHTML = `
+      <div class="form-row">
+        <label>Amenities</label>
+        <div id="${amenitiesId}" class="amenities-checklist">
+          ${allAmenities.map((amenity) => `
+            <label class="amenity-option">
+              <input type="checkbox" class="profile-amenity-checkbox" value="${String(amenity.id)}" ${currentAmenityIds.includes(String(amenity.id)) ? "checked" : ""}>
+              <span>${amenity.name || "Amenity"}</span>
+            </label>
+          `).join("")}
+        </div>
+      </div>
+      `;
+    }
 
     form.className = "form profile-card";
     form.innerHTML = `
@@ -120,6 +181,7 @@ function renderProfilePlaces(places) {
           <input id="${longitudeId}" name="longitude" type="number" min="-180" max="180" step="0.000001" value="${Number(place.longitude || 0)}" required>
         </div>
       </div>
+      ${amenitiesHTML}
       <p class="form-error profile-place-message" role="alert" aria-live="polite"></p>
       <button type="submit" class="details-button">Update Place</button>
     `;
@@ -139,12 +201,16 @@ function renderProfilePlaces(places) {
         message.className = "form-error profile-place-message";
       }
 
+      const selectedAmenityCheckboxes = form.querySelectorAll(".profile-amenity-checkbox:checked");
+      const selectedAmenityIds = Array.from(selectedAmenityCheckboxes).map(checkbox => checkbox.value);
+
       const payload = {
         title: (form.querySelector("input[name='title']")?.value || "").trim(),
         description: (form.querySelector("textarea[name='description']")?.value || "").trim(),
         price: Number(form.querySelector("input[name='price']")?.value || 0),
         latitude: Number(form.querySelector("input[name='latitude']")?.value || 0),
-        longitude: Number(form.querySelector("input[name='longitude']")?.value || 0)
+        longitude: Number(form.querySelector("input[name='longitude']")?.value || 0),
+        amenities: selectedAmenityIds
       };
 
       submitButton.disabled = true;
@@ -289,9 +355,10 @@ async function setupProfilePage() {
       lastNameInput.value = user.last_name || "";
     }
 
+    const allAmenities = await fetchAmenities();
     const allPlaces = await fetchPlaces();
     const myPlaces = allPlaces.filter((place) => String(place.owner_id) === String(userId));
-    renderProfilePlaces(myPlaces);
+    renderProfilePlaces(myPlaces, allAmenities);
 
     const placeReviews = await Promise.all(
       allPlaces.map(async (place) => {

@@ -188,6 +188,7 @@ async function renderPlaces(places) {
 		card.dataset.price = String(placePrice);
 
 		titleElement.textContent = placeTitle;
+		descriptionElement.className = "place-description";
 		descriptionElement.textContent = description;
 
 		ratingElement.className = "place-rating";
@@ -203,7 +204,11 @@ async function renderPlaces(places) {
 		detailsLink.href = `place.html?id=${encodeURIComponent(place.id)}`;
 		detailsLink.textContent = "View details";
 
-		card.append(titleElement, descriptionElement, ratingElement, priceElement, detailsLink);
+		const metaSection = document.createElement("div");
+		metaSection.className = "place-meta";
+		metaSection.append(ratingElement, priceElement);
+
+		card.append(titleElement, descriptionElement, metaSection, detailsLink);
 		placesList.appendChild(card);
 
 		try {

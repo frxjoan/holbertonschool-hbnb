@@ -215,7 +215,7 @@ textarea {
   border-radius: 8px;
   font: inherit;
   color: var(--text);
-  background: #fff;
+  background: var(--surface);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -274,6 +274,14 @@ select:hover {
   margin: 8px 0;
 }
 
+.place-description {
+  flex: 1;
+}
+
+.place-meta {
+  margin-top: auto;
+}
+
 .place-rating {
   font-weight: 600;
   color: var(--text-secondary);
@@ -320,7 +328,7 @@ select:hover {
 }
 
 .place-card .details-button {
-  margin-top: auto;
+  margin-top: 10px;
 }
 
 .place-details {
@@ -392,13 +400,13 @@ select:hover {
   padding: 2px 8px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--surface);
   color: var(--text-secondary);
   box-shadow: none;
 }
 
 .review-actions-toggle:hover {
-  background: #eef3fb;
+  background: var(--surface-alt);
   box-shadow: none;
 }
 
@@ -410,7 +418,7 @@ select:hover {
   min-width: 140px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: var(--surface);
   box-shadow: 0 8px 20px rgba(31, 41, 55, 0.15);
   padding: 6px;
 }
@@ -444,12 +452,12 @@ select:hover {
 }
 
 .review-edit-button:hover {
-  background: #eff6ff;
+  background: var(--surface-alt);
   box-shadow: none;
 }
 
 .review-edit-form {
-  background: #f8fbff;
+  background: var(--surface-alt);
   padding: 16px;
   border-radius: 8px;
   border: 1px solid var(--line);
@@ -508,7 +516,7 @@ select:hover {
   padding: 8px;
   display: grid;
   gap: 8px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .amenity-option {
@@ -517,7 +525,7 @@ select:hover {
   gap: 8px;
   padding: 6px 8px;
   border-radius: 6px;
-  background: #f8fbff;
+  background: var(--surface-alt);
 }
 
 .amenity-option input {
@@ -528,7 +536,7 @@ select:hover {
 .amenities-checklist {
   display: grid;
   gap: 8px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .profile-amenity-checkbox {
@@ -537,7 +545,7 @@ select:hover {
 }
 
 .form {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 24px;
@@ -553,7 +561,7 @@ select:hover {
   display: block;
   margin-bottom: 8px;
   font-weight: 700;
-  color: #3b3630;
+  color: var(--text);
 }
 
 .form-error {
