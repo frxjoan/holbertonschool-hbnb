@@ -1,3 +1,4 @@
+// Fetches the list of available amenities for the place form.
 async function fetchAmenities() {
   const response = await fetch(`${API_BASE_URL}/amenities/`, {
     method: "GET",
@@ -18,6 +19,7 @@ async function fetchAmenities() {
   return Array.isArray(data) ? data : [];
 }
 
+// Adds helper tooltips to numeric inputs based on their allowed range.
 function applyNumericFieldTooltips(fields) {
   fields.forEach((field) => {
     if (!field) {
@@ -37,6 +39,7 @@ function applyNumericFieldTooltips(fields) {
   });
 }
 
+// Renders amenity checkboxes inside the place creation form.
 function renderAmenitiesForPlaceForm(amenities) {
   const amenitiesChecklist = document.getElementById("place-amenities-checklist");
 
@@ -71,11 +74,13 @@ function renderAmenitiesForPlaceForm(amenities) {
   });
 }
 
+// Collects the ids of all selected amenities in the form.
 function getSelectedAmenityIds() {
   const selected = document.querySelectorAll(".place-amenity-checkbox:checked");
   return Array.from(selected).map((checkbox) => checkbox.value);
 }
 
+// Sends a new place payload to the API.
 async function submitPlace(title, description, price, latitude, longitude, amenityIds) {
   const response = await fetch(`${API_BASE_URL}/places/`, {
     method: "POST",
@@ -107,6 +112,7 @@ async function submitPlace(title, description, price, latitude, longitude, ameni
   return data;
 }
 
+// Sends a new amenity payload to the API.
 async function submitAmenity(name) {
   const response = await fetch(`${API_BASE_URL}/amenities/`, {
     method: "POST",
@@ -131,6 +137,7 @@ async function submitAmenity(name) {
   return data;
 }
 
+// Sets up the create place page, including admin-only controls.
 async function setupCreatePlacePage() {
   const createPlaceForm = document.getElementById("create-place-form");
 

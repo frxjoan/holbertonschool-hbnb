@@ -1,7 +1,9 @@
+// Clears the stored authentication token cookie.
 function clearTokenCookie() {
   document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
 }
 
+// Decodes the JWT payload and returns it as an object.
 function parseJwtPayload(token) {
   if (!token || typeof token !== "string") {
     return null;
@@ -21,15 +23,18 @@ function parseJwtPayload(token) {
   }
 }
 
+// Returns the current JWT claims from the token cookie.
 function getTokenClaims() {
   return parseJwtPayload(getCookie("token"));
 }
 
+// Checks whether the authenticated user has admin privileges.
 function isAdminAuthenticated() {
   const claims = getTokenClaims();
   return Boolean(claims && (claims.is_admin === true || claims.is_admin === "true"));
 }
 
+// Returns the current authenticated user id, if available.
 function getCurrentUserId() {
   const claims = getTokenClaims();
   if (!claims) {
@@ -40,6 +45,7 @@ function getCurrentUserId() {
   return rawUserId ? String(rawUserId) : null;
 }
 
+// Fetches a user record by id from the API.
 async function fetchUserById(userId) {
   const response = await fetch(`${API_BASE_URL}/users/${encodeURIComponent(userId)}`, {
     method: "GET",
@@ -60,6 +66,7 @@ async function fetchUserById(userId) {
   return data;
 }
 
+// Updates the displayed connected user name in the header.
 async function updateConnectedUserName() {
   const userNameElements = document.querySelectorAll(".auth-user-name");
   if (userNameElements.length === 0) {
@@ -105,6 +112,7 @@ async function updateConnectedUserName() {
   }
 }
 
+// Shows or hides navigation links based on the current auth state.
 function updateAuthNavigation() {
   const token = getCookie("token");
 
@@ -141,6 +149,7 @@ function updateAuthNavigation() {
   updateConnectedUserName();
 }
 
+// Creates a new user account through the API.
 async function createUser(firstName, lastName, email, password) {
   const response = await fetch(`${API_BASE_URL}/users/`, {
     method: "POST",
@@ -169,6 +178,7 @@ async function createUser(firstName, lastName, email, password) {
   return data;
 }
 
+// Wires up the signup form submission flow.
 function setupSignupForm() {
   const signupForm = document.getElementById("signup-form");
 
@@ -229,6 +239,7 @@ function setupSignupForm() {
   });
 }
 
+// Wires up logout buttons so they clear auth state.
 function setupLogoutButtons() {
   const logoutLinks = document.querySelectorAll(".auth-logout-link");
 

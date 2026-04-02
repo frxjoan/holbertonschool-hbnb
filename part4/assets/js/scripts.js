@@ -1,12 +1,14 @@
 const API_BASE_URL = "http://localhost:5000/api/v1";
 
 // Theme management
+// Initializes the persisted theme state on page load.
 function initializeTheme() {
 	const savedTheme = localStorage.getItem("theme") || "light";
 	document.documentElement.setAttribute("data-theme", savedTheme);
 	updateThemeButton(savedTheme);
 }
 
+// Switches between light and dark themes.
 function toggleTheme() {
 	const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
 	const newTheme = currentTheme === "light" ? "dark" : "light";
@@ -15,6 +17,7 @@ function toggleTheme() {
 	updateThemeButton(newTheme);
 }
 
+// Updates the theme toggle button label and accessibility text.
 function updateThemeButton(theme) {
 	const button = document.getElementById("theme-toggle");
 	if (button) {
@@ -23,6 +26,7 @@ function updateThemeButton(theme) {
 	}
 }
 
+// Wires the theme toggle button to the theme switch handler.
 function setupThemeToggle() {
 	const themeButton = document.getElementById("theme-toggle");
 	if (themeButton) {
@@ -36,10 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	setupThemeToggle();
 });
 
+// Stores the JWT token in a cookie for later API requests.
 function setTokenCookie(token) {
 	document.cookie = `token=${encodeURIComponent(token)}; path=/; SameSite=Lax`;
 }
 
+// Reads a cookie value by name.
 function getCookie(name) {
 	const cookies = document.cookie ? document.cookie.split(";") : [];
 
@@ -53,6 +59,7 @@ function getCookie(name) {
 	return null;
 }
 
+// Builds the Authorization header from the stored JWT token.
 function getAuthHeaders() {
 	const token = getCookie("token");
 	const headers = {};
@@ -64,6 +71,7 @@ function getAuthHeaders() {
 	return headers;
 }
 
+// Authenticates the user and returns an access token.
 async function loginUser(email, password) {
 	const response = await fetch(`${API_BASE_URL}/auth/login`, {
 		method: "POST",
@@ -92,6 +100,7 @@ async function loginUser(email, password) {
 	return data.access_token;
 }
 
+// Fetches the list of places from the API.
 async function fetchPlaces() {
 	const response = await fetch(`${API_BASE_URL}/places/`, {
 		method: "GET",
@@ -116,6 +125,7 @@ async function fetchPlaces() {
 	return data;
 }
 
+// Fetches a single place with full details.
 async function fetchPlaceDetails(placeId) {
 	const response = await fetch(`${API_BASE_URL}/places/${encodeURIComponent(placeId)}`, {
 		method: "GET",
@@ -136,6 +146,7 @@ async function fetchPlaceDetails(placeId) {
 	return data;
 }
 
+// Fetches all reviews for a given place.
 async function fetchPlaceReviews(placeId) {
 	const response = await fetch(`${API_BASE_URL}/places/${encodeURIComponent(placeId)}/reviews`, {
 		method: "GET",
@@ -156,6 +167,7 @@ async function fetchPlaceReviews(placeId) {
 	return Array.isArray(data) ? data : [];
 }
 
+// Renders the place cards on the index page.
 async function renderPlaces(places) {
 	const placesList = document.getElementById("places-list");
 
@@ -230,6 +242,7 @@ async function renderPlaces(places) {
 	}
 }
 
+// Filters place cards by maximum price.
 function applyPriceFilter(selectedValue) {
 	const cards = document.querySelectorAll(".place-card");
 
@@ -240,11 +253,13 @@ function applyPriceFilter(selectedValue) {
 	});
 }
 
+// Reads the place id from the current URL.
 function getPlaceIdFromURL() {
 	const params = new URLSearchParams(window.location.search);
 	return params.get("id") || params.get("place_id");
 }
 
+// Hides or shows the add-review link depending on auth state.
 function checkAuthentication(placeId) {
 	const token = getCookie("token");
 	const addReviewLink = document.getElementById("add-review-link");
@@ -259,6 +274,7 @@ function checkAuthentication(placeId) {
 	}
 }
 
+// Hides the login link when a user is already authenticated.
 function checkAuthenticationForIndex() {
 	const token = getCookie("token");
 	const loginLink = document.getElementById("login-link");
@@ -270,6 +286,7 @@ function checkAuthenticationForIndex() {
 	loginLink.style.display = token ? "none" : "";
 }
 
+// Redirects unauthenticated users to the index page.
 async function requireAuthentication() {
 	const token = getCookie("token");
 
@@ -281,6 +298,7 @@ async function requireAuthentication() {
 	return token;
 }
 
+// Renders the details section for a single place.
 function displayPlaceDetails(place) {
 	const titleElement = document.getElementById("place-title");
 	const hostElement = document.getElementById("place-host");
@@ -319,6 +337,7 @@ function displayPlaceDetails(place) {
 	}
 }
 
+// Renders review cards for the place details page.
 function renderPlaceReviews(reviews) {
 	const reviewsList = document.getElementById("reviews-list");
 
@@ -357,6 +376,7 @@ function renderPlaceReviews(reviews) {
 	});
 }
 
+// Submits a new review for the current place.
 async function submitReview(placeId, reviewText, rating) {
 	const response = await fetch(`${API_BASE_URL}/reviews/`, {
 		method: "POST",
@@ -386,6 +406,7 @@ async function submitReview(placeId, reviewText, rating) {
 	return data;
 }
 
+// Wires up the login form submission.
 function setupLoginForm() {
 	const loginForm = document.getElementById("login-form");
 
@@ -427,6 +448,7 @@ function setupLoginForm() {
 	});
 }
 
+// Boots the index page and loads place data.
 async function setupIndexPage() {
 	const priceFilter = document.getElementById("price-filter");
 	const placesList = document.getElementById("places-list");
@@ -452,6 +474,7 @@ async function setupIndexPage() {
 	}
 }
 
+// Boots the place details page and loads place reviews.
 async function setupPlaceDetailsPage() {
 	const titleElement = document.getElementById("place-title");
 
@@ -485,6 +508,7 @@ async function setupPlaceDetailsPage() {
 	}
 }
 
+// Boots the add review page and wires form submission.
 async function setupAddReviewPage() {
 	const reviewForm = document.getElementById("review-form");
 
