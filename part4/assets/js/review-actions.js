@@ -1,3 +1,4 @@
+// Fetches a user record so review cards can display names.
 async function fetchUserById(userId) {
   const response = await fetch(`${API_BASE_URL}/users/${encodeURIComponent(userId)}`, {
     headers: getAuthHeaders()
@@ -17,6 +18,7 @@ async function fetchUserById(userId) {
   return data;
 }
 
+// Formats a user object into a displayable full name.
 function formatUserName(user) {
   if (!user) {
     return "Unknown";
@@ -27,6 +29,7 @@ function formatUserName(user) {
   return fullName || "Unknown";
 }
 
+// Deletes a review by id.
 async function deleteReview(reviewId) {
   const response = await fetch(`${API_BASE_URL}/reviews/${encodeURIComponent(reviewId)}`, {
     method: "DELETE",
@@ -47,6 +50,7 @@ async function deleteReview(reviewId) {
   return data;
 }
 
+// Updates a review inline from the place page menu.
 async function updateReviewInline(reviewId, text, rating) {
   const response = await fetch(`${API_BASE_URL}/reviews/${encodeURIComponent(reviewId)}`, {
     method: "PUT",
@@ -71,6 +75,7 @@ async function updateReviewInline(reviewId, text, rating) {
   return data;
 }
 
+// Renders the list of reviews with per-review actions.
 function renderPlaceReviews(reviews, placeId) {
   const reviewsList = document.getElementById("reviews-list");
   const currentUserId = typeof getCurrentUserId === "function" ? getCurrentUserId() : null;
@@ -270,6 +275,7 @@ function renderPlaceReviews(reviews, placeId) {
       });
   });
 
+  // Placeholder hook kept for restoring the original review card layout.
   function setupReviewCardActions() {
   }
 }

@@ -1,3 +1,4 @@
+// Fetches a user by id for profile display and editing.
 async function fetchUserById(userId) {
   const response = await fetch(`${API_BASE_URL}/users/${encodeURIComponent(userId)}`, {
     headers: getAuthHeaders()
@@ -17,6 +18,7 @@ async function fetchUserById(userId) {
   return data;
 }
 
+// Fetches all amenities so profile place forms can edit them.
 async function fetchAmenities() {
   const response = await fetch(`${API_BASE_URL}/amenities/`, {
     method: "GET",
@@ -37,6 +39,7 @@ async function fetchAmenities() {
   return Array.isArray(data) ? data : [];
 }
 
+// Sends profile updates for the current user.
 async function updateCurrentUser(userId, firstName, lastName) {
   const response = await fetch(`${API_BASE_URL}/users/${encodeURIComponent(userId)}`, {
     method: "PUT",
@@ -64,6 +67,7 @@ async function updateCurrentUser(userId, firstName, lastName) {
   return data;
 }
 
+// Sends place updates, including amenity changes, to the API.
 async function updatePlace(placeId, payload) {
   const response = await fetch(`${API_BASE_URL}/places/${encodeURIComponent(placeId)}`, {
     method: "PUT",
@@ -88,6 +92,7 @@ async function updatePlace(placeId, payload) {
   return data;
 }
 
+// Sends review updates for the current user.
 async function updateReview(reviewId, payload) {
   const response = await fetch(`${API_BASE_URL}/reviews/${encodeURIComponent(reviewId)}`, {
     method: "PUT",
@@ -112,6 +117,7 @@ async function updateReview(reviewId, payload) {
   return data;
 }
 
+// Renders editable place cards for the user's own places.
 function renderProfilePlaces(places, allAmenities = []) {
   const container = document.getElementById("profile-places-list");
 
@@ -237,6 +243,7 @@ function renderProfilePlaces(places, allAmenities = []) {
   });
 }
 
+// Renders editable review cards for the user's own reviews.
 function renderProfileReviews(reviews) {
   const container = document.getElementById("profile-reviews-list");
 
@@ -321,6 +328,7 @@ function renderProfileReviews(reviews) {
   });
 }
 
+// Boots the profile page, loads data, and wires form handlers.
 async function setupProfilePage() {
   const profilePage = document.getElementById("profile-page");
 
